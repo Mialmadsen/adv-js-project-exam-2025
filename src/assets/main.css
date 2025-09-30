@@ -1,4 +1,5 @@
 @import './base.css';
+<<<<<<< Updated upstream
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @theme {
@@ -15,6 +16,9 @@
   --color-very-grey: #837d72;
   --color-very-dark: #1c1713;
 }
+=======
+@import "tailwindcss";
+>>>>>>> Stashed changes
 
 #app {
   max-width: 1280px;
