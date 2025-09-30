@@ -1,4 +1,20 @@
 @import './base.css';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@theme {
+
+  /* Font Settings */
+  --font-family1: 'Impact', sans-serif;
+  --font-family2: 'Futura', sans-serif;
+  --font-family3: "Open Sans", sans-serif;
+
+  /* Colors */
+  --color-butter-yellow: #fefdef;
+  --color-very-light: #efefec;
+  --color-very-light-grey: #cccac2;
+  --color-very-grey: #837d72;
+  --color-very-dark: #1c1713;
+}
 
 #app {
   max-width: 1280px;
