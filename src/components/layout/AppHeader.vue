@@ -32,11 +32,11 @@ const isAuthed  = ref(false)
         <div class="hidden md:flex items-center gap-5 text-text/80">
           <!-- user icon -->
           <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
-              <i class="fa-solid fa-user text-2xl text-teal hover:text-text"></i>
+              <i class="fa-solid fa-user text-2xl text-text hover:text-teal"></i>
           </RouterLink>
           <!-- cart icon (placeholder for future payments) -->
           <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
-            <i class="fa-solid fa-cart-shopping text-2xl text-teal hover:text-text"></i>
+            <i class="fa-solid fa-cart-shopping text-2xl text-text hover:text-teal"></i>
           </RouterLink>
         </div>
 

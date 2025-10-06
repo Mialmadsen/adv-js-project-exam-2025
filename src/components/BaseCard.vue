@@ -13,20 +13,20 @@ const props = defineProps({
 
 <template>
   <article
-    class="group relative flex flex-col rounded-md text-text max-w-1/2
-           ring-1 ring-teal/40 transition hover:ring-teal hover:-translate-y-0.5"
+    class="group relative flex flex-col rounded-md text-text w-full sm:w-1/2 max-w-[520px] xl:max-w-[560px] mx-auto
+           ring-1 ring-teal/40 transition  hover:brightness-110  hover:bg-teal/10 hover:ring-offset-2  hover:ring-offset-bg hover:ring-teal hover:-translate-y-0.5"
   >
     <!-- top media block (image or brand gradient) -->
-    <div class="relative mx-6 -mt-8 h-40 overflow-hidden rounded-md shadow-lg">
+    <div class="relative mx-6 -mt-8 aspect-[16/9]  overflow-hidden rounded-md shadow-lg">
       <img v-if="image" :src="image" alt="" class="h-full w-full object-cover" />
       <div v-else class="h-full w-full bg-[image:var(--color-gradient)]"></div>
     </div>
 
     <!-- body -->
-     <div class="flex flex-row p-6  ustify-between items-end">
-    <div class="p-6">
-      <h3 class="font-title text-2xl text-accent mb-2">{{ title }}</h3>
-      <ul class="font-body text-base text-text/80 space-y-0.5">
+     <div class="flex flex-col lg:flex-row p-6  justify-between items-end sm:items-stretch">
+    <div class="gap-6 p-6 sm:p-6 ">
+      <h3 class="font-title text-xl sm:text-2xl text-accent mb-2">{{ title }}</h3>
+      <ul class="font-body text-sm sm:text-base text-text/80 space-y-1  whitespace-nowrap">
         <li v-if="length"><span class="text-text font-semibold">Length</span> • {{ length }}</li>
         <li v-if="location"><span class="text-text font-semibold">Location</span> • {{ location }}</li>
         <li v-if="date"><span class="text-text font-semibold">Date</span> • {{ date }}</li>
@@ -34,7 +34,7 @@ const props = defineProps({
     </div>
 
     <!-- action -->
-    <div class="p-6 pt-0">
+    <div class="p-6 pt-0 sm:self-end">
       <RouterLink v-if="to" :to="to">
         <BaseButton>View race</BaseButton>
       </RouterLink>

@@ -13,10 +13,23 @@ const props = defineProps({
     :type="props.type"
     :disabled="props.disabled"
     :aria-disabled="props.disabled ? 'true' : 'false'"
-    class="inline-flex items-center justify-center rounded-md px-8 py-4
-           font-title font-semibold uppercase tracking-wide
-           bg-teal text-text transition duration-200
+    class="inline-flex w-full sm:w-auto items-center justify-center rounded-md
+           font-title font-semibold uppercase
+           bg-teal text-text text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 transition duration-200
            hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal
+           disabled:opacity-60 disabled:pointer-events-none"
+  >
+    <slot>Button</slot>
+  </button>
+  <button
+   v-else-if="props.variant === 'outline'"
+    :type="props.type"
+    :disabled="props.disabled"
+    :aria-disabled="props.disabled ? 'true' : 'false'"
+    class="inline-flex w-full sm:w-auto items-center justify-center rounded-md
+           font-title font-semibold uppercase text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider border border-teal
+          text-text px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 transition duration-200
+           hover:brightness-110  hover:bg-teal/10 hover:ring-1 hover:ring-offset-2 hover:ring-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ring-offset-bg
            disabled:opacity-60 disabled:pointer-events-none"
   >
     <slot>Button</slot>
@@ -27,8 +40,8 @@ const props = defineProps({
     :type="props.type"
     :disabled="props.disabled"
     :aria-disabled="props.disabled ? 'true' : 'false'"
-    class="class=buttonLiquid group relative inline-flex overflow-hidden rounded-md
-           bg-black/20 px-8 py-4 uppercase font-title text-on-brand-text tracking-wide
+    class="buttonLiquid group relative inline-flex shrink-0 whitespace-nowrap w-full sm:w-auto overflow-hidden rounded-md
+           bg-black/20 uppercase font-title text-on-brand-text text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4
            transition-all duration-300 active:scale-[0.98] hover:bg-white/10"
   >
     <span class="text relative z-20 transition-all duration-300
@@ -60,16 +73,7 @@ const props = defineProps({
 
 
 <style scoped>
-/* text */
-/* .text { transition: all .3s ease; text-shadow: 0 1px 2px rgba(0,0,0,.7); } */
-.buttonLiquid:hover .text { text-shadow: 0 1px 2px rgba(0,0,0,.3); }
 
-/* glow using brand color (#3E66E0) */
-@keyframes glow {
-  0%,100% { box-shadow: 0 0 5px rgba(62,102,224,.7); }
-  50%     { box-shadow: 0 0 20px rgba(62,102,224,.9); }
-}
-.buttonLiquid:hover { animation: glow 1.5s ease-in-out infinite; }
 
 /* rotating inner shapes */
 .liquid::before,

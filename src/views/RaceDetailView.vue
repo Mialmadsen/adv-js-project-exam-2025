@@ -1,5 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router'
+import BaseButton from '@/components/BaseButton.vue'
 const route = useRoute()
 const id = route.params.id // "hard" or "light"
 </script>
@@ -14,9 +15,8 @@ const id = route.params.id // "hard" or "light"
     <p class="font-body">Here we’ll show distance, map, date, etc.</p>
 
     <RouterLink :to="{ name: 'register', params: { raceId: id } }"
-      class="inline-block bg-[color:var(--color-brand)] text-[color:var(--color-on-brand-text)]
-             rounded-lg px-5 py-3 font-title">
-      Register
+      >
+      <BaseButton variant="solid">Register</BaseButton>
     </RouterLink>
   </section>
 </template>
