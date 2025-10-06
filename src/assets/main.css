@@ -1,52 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-@import './base.css';
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Montserrat:wght@600;700;800&display=swap");
+
 @import "tailwindcss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
 
 @theme {
+  /* FONTS */
+  --font-title: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-body: "Karla", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 
-  /* Font Settings */
-  --font-family1: 'Impact', sans-serif;
-  --font-family2: 'Futura', sans-serif;
-  --font-family3: "Open Sans", sans-serif;
+  /* BASE NEUTRALS */
+  --color-bg:  #C6F7F3;   /* page background */
+  --color-text:  #0F172A; /* dark text */
+  --color-on-brand-text: #F5FAFF;
 
-  /* Colors */
-  --color-butter-yellow: #fefdef;
-  --color-very-light: #efefec;
-  --color-very-light-grey: #cccac2;
-  --color-very-grey: #837d72;
-  --color-very-dark: #1c1713;
+
+  /* BRAND PALETTE */
+  --color-brand:#3E66E0; /* blue */
+  --color-accent:#7841C6; /* purple */
+  --color-cyan:#00CAFF; /* sky */
+  --color-teal:#00EACC; /* teal */
+  --color-danger:#ED0234; /* red */
+  --color-gradient: linear-gradient(135deg, #416FE4 0%, #00EACC 55%, #00CAFF 100%);
+
+
+
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
+@utility font-title { font-family: var(--font-title); }
+@utility font-body  { font-family: var(--font-body); }
+@utility bg-gradient { background-image: var(--color-gradient); }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
+html { font-family: var(--font-body); background: var(--color-bg); color: var(--color-fg); }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    /* place-items: center; */
-  }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr;
-    padding: 0 2rem;
-  }
-}
