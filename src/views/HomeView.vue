@@ -5,7 +5,7 @@
   <section class="mt-8 ">
     <h2 class="font-title text-3xl text-accent mb-4">Check out our races!</h2>
 
-    <div id="races" class="flex flex-row justify-around my-14">
+    <div id="races" class="flex flex-row justify-around my-14 gap-8">
       <BaseCard
         title="SwimRun HARD"
         length="13 km"

@@ -13,7 +13,7 @@ const props = defineProps({
 
 <template>
   <article
-    class="group relative flex w-fill-content flex-col rounded-md text-text
+    class="group relative flex flex-col rounded-md text-text max-w-1/2
            ring-1 ring-teal/40 transition hover:ring-teal hover:-translate-y-0.5"
   >
     <!-- top media block (image or brand gradient) -->
