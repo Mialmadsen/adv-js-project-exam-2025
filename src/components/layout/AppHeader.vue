@@ -1,11 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import logoUrl from '@/assets/Logo.svg'
+import MenuDropdown from '@/components/MenuDropdown.vue'
+import { useRole } from '@/composables/useRole'
 
-/* simple mobile toggle + fake auth (we’ll wire Firebase later) */
+/* mobile nav toggle */
 const menuOpen = ref(false)
-const isAuthed  = ref(false)
-const racesOpen = ref(false)
+
+/* role-based header bits */
+const { isUser, isAdmin } = useRole()
+const isAuthed = computed(() => isUser.value || isAdmin.value)
+const displayName = computed(() => (isAdmin.value ? 'Admin' : 'Athlete')) // placeholder until real profile
+const initial = computed(() => displayName.value?.[0] ?? 'U')
+
 </script>
 
 <template>
@@ -24,67 +31,115 @@ const racesOpen = ref(false)
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8 font-body text-lg text-text">
 
-                            <!-- Races: word scrolls to #races, arrow opens menu -->
-              <div class="relative">
-                <div class="flex items-center gap-2">
-                  <!-- click the word to scroll to section on Home -->
-                  <RouterLink :to="{ path: '/', hash: '#races' }" class="hover:text-teal">
-                    Races
-                  </RouterLink>
+                            <!-- Races: word scrolls menu -->
+            <MenuDropdown>
+            <!-- trigger: word scrolls to #races, arrow toggles menu -->
+            <template #trigger="{ toggle }">
+              <div class="flex items-center gap-2">
+                <RouterLink :to="{ path: '/', hash: '#races' }" class="hover:text-teal">
+                  Races
+                </RouterLink>
+                <button
+                  class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
+                  @click="toggle"
+                  aria-label="Open races menu"
+                  aria-haspopup="menu"
 
-                  <!-- click the arrow to open the dropdown -->
-                  <button
-                    class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
-                    @click="racesOpen = !racesOpen"
-                    aria-label="Open races menu"
-                    aria-haspopup="menu"
-                    :aria-expanded="racesOpen"
-                  >
-                    <i class="fa-solid fa-chevron-down"></i>
-                  </button>
-                </div>
-
-                <!-- dropdown -->
-                <div
-                  v-if="racesOpen"
-                  class="absolute left-0 mt-4 w-56 rounded-md bg-teal shadow-lg"
                 >
-                  <RouterLink
-                    :to="{ name: 'race', params: { id: 'hard' } }"
-                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-                    @click="racesOpen = false"
-                  >
-                    SwimRun HARD
-                  </RouterLink>
-                  <RouterLink
-                    :to="{ name: 'race', params: { id: 'light' } }"
-                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-                    @click="racesOpen = false"
-                  >
-                    SwimRun LIGHT
-                  </RouterLink>
-                </div>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
               </div>
+            </template>
+
+            <!-- panel items (your styles + icons) -->
+            <template #default="{ close }">
+              <RouterLink
+                :to="{ name: 'race', params: { id: 'hard' } }"
+                class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                @click="close()"
+              >
+                <i class="fa-solid fa-person-swimming"></i> SwimRun HARD
+              </RouterLink>
+              <RouterLink
+                :to="{ name: 'race', params: { id: 'light' } }"
+                class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                @click="close()"
+              >
+                <i class="fa-solid fa-person-swimming"></i> SwimRun LIGHT
+              </RouterLink>
+            </template>
+          </MenuDropdown>
 
 
 
 
           <RouterLink to="/participants" class="hover:text-text">Runners</RouterLink>
 
-          <RouterLink v-if="isAuthed" to="/profile" class="hover:text-text">My profile</RouterLink>
+
         </nav>
 
-        <!-- Right icons (simple) -->
+        <!-- Right icons -->
         <div class="hidden md:flex items-center gap-5 text-text/80">
-          <!-- user icon -->
-          <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
-              <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
-          </RouterLink>
-          <!-- cart icon (placeholder for future payments) -->
+            <!-- if NOT authed: show login -->
+            <template v-if="!isAuthed">
+              <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
+                <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
+              </RouterLink>
+            </template>
+
+  <!-- if authed: show avatar + greeting + button -->
+          <template v-else>
+  <MenuDropdown align="right">
+    <!-- trigger button -->
+    <template #trigger="{ toggle }">
+      <div class="flex items-center gap-2 text-lg">
+          <div class="h-8 w-8 rounded-full bg-teal ring-2 ring-teal
+                              flex items-center justify-center text-text font-title">
+                    {{ initial }}
+                  </div>
+                  <span class="font-body">Hi, {{ displayName }}</span>
+                <button
+                  class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-teal/40 text-text"
+                  @click="toggle"
+                  aria-label="Open profile menu"
+
+                >
+
+
+                  <i class="fa-solid fa-chevron-down"
+                    ></i>
+                </button>
+
+
+      </div>
+
+    </template>
+
+    <!-- menu items -->
+    <template  #default="{ close }" >
+      <RouterLink
+        to="/profile"
+        class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+        @click="close()"
+      >
+        <i class="fa-solid fa-passport"></i> Profile
+      </RouterLink>
+
+      <button
+        class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+        @click="setRole('guest'); close()"
+      >
+        <i class="fa-solid fa-right-from-bracket"></i> Log out
+      </button>
+    </template>
+  </MenuDropdown>
+</template>
+
+  <!-- register cart -->
           <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
             <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
           </RouterLink>
-        </div>
+      </div>
 
         <!-- Mobile menu button -->
         <button
@@ -104,12 +159,32 @@ const racesOpen = ref(false)
 
       <!-- Mobile nav panel -->
       <div v-if="menuOpen" class="md:hidden border-t border-teal px-4 sm:px-6 py-3 font-body">
-        <div class="flex flex-col gap-3">
-          <RouterLink to="/" class="py-1 hover:text-text">Rases</RouterLink>
-          <RouterLink to="/participants" class="py-1 hover:text-text">Runners</RouterLink>
-          <RouterLink to="/auth/login" class="py-1 hover:text-text">Sign in</RouterLink>
-          <RouterLink v-if="isAuthed" to="/profile" class="py-1 hover:text-text">My profile</RouterLink>
-        </div>
+        <ul class="flex flex-col gap-3">
+          <ul> <RouterLink to="/" class="py-1 hover:text-text">Rases</RouterLink>
+          <li> <RouterLink
+                    :to="{ name: 'race', params: { id: 'hard' } }"
+                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+
+                  ><i class="fa-solid fa-person-swimming"></i>
+                    SwimRun HARD
+                  </RouterLink></li>
+          <li> <RouterLink
+                    :to="{ name: 'race', params: { id: 'light' } }"
+                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+
+                  ><i class="fa-solid fa-person-swimming"></i>
+                    SwimRun LIGHT
+                  </RouterLink></li>
+          </ul>
+
+          <li><RouterLink to="/participants" class="py-1 hover:text-text">Runners</RouterLink></li>
+          <li><RouterLink to="/auth/login" class="py-1 hover:text-text">Sign in</RouterLink></li>
+          <li><RouterLink v-if="isAuthed" to="/profile" class="py-1 hover:text-text">My profile</RouterLink></li>
+
+
+
+
+        </ul>
       </div>
     </div>
   </div>
