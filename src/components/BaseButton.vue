@@ -40,11 +40,11 @@ const props = defineProps({
     :type="props.type"
     :disabled="props.disabled"
     :aria-disabled="props.disabled ? 'true' : 'false'"
-    class="buttonLiquid group relative inline-flex shrink-0 whitespace-nowrap w-full sm:w-auto overflow-hidden rounded-md
+    class="buttonLiquid group relative inline-flex justify-between shrink-0 whitespace-nowrap w-full sm:w-auto overflow-hidden rounded-md
            bg-black/20 uppercase font-title text-on-brand-text text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4
            transition-all duration-300 active:scale-[0.98] hover:bg-white/10"
   >
-    <span class="text relative z-20 transition-all duration-300
+    <span class="relative z-20 transition-all duration-300
                  group-hover:text-text">
       <slot>Liquid</slot>
     </span>

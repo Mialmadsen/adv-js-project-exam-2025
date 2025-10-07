@@ -5,6 +5,7 @@ import logoUrl from '@/assets/Logo.svg'
 /* simple mobile toggle + fake auth (we’ll wire Firebase later) */
 const menuOpen = ref(false)
 const isAuthed  = ref(false)
+const racesOpen = ref(false)
 </script>
 
 <template>
@@ -22,7 +23,52 @@ const isAuthed  = ref(false)
 
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-8 font-body text-lg text-text">
-          <RouterLink to="/" class="hover:text-text">Races</RouterLink>
+
+                            <!-- Races: word scrolls to #races, arrow opens menu -->
+              <div class="relative">
+                <div class="flex items-center gap-2">
+                  <!-- click the word to scroll to section on Home -->
+                  <RouterLink :to="{ path: '/', hash: '#races' }" class="hover:text-teal">
+                    Races
+                  </RouterLink>
+
+                  <!-- click the arrow to open the dropdown -->
+                  <button
+                    class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
+                    @click="racesOpen = !racesOpen"
+                    aria-label="Open races menu"
+                    aria-haspopup="menu"
+                    :aria-expanded="racesOpen"
+                  >
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </button>
+                </div>
+
+                <!-- dropdown -->
+                <div
+                  v-if="racesOpen"
+                  class="absolute left-0 mt-4 w-56 rounded-md bg-teal shadow-lg"
+                >
+                  <RouterLink
+                    :to="{ name: 'race', params: { id: 'hard' } }"
+                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                    @click="racesOpen = false"
+                  >
+                    SwimRun HARD
+                  </RouterLink>
+                  <RouterLink
+                    :to="{ name: 'race', params: { id: 'light' } }"
+                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                    @click="racesOpen = false"
+                  >
+                    SwimRun LIGHT
+                  </RouterLink>
+                </div>
+              </div>
+
+
+
+
           <RouterLink to="/participants" class="hover:text-text">Runners</RouterLink>
 
           <RouterLink v-if="isAuthed" to="/profile" class="hover:text-text">My profile</RouterLink>
@@ -32,37 +78,36 @@ const isAuthed  = ref(false)
         <div class="hidden md:flex items-center gap-5 text-text/80">
           <!-- user icon -->
           <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
-              <i class="fa-solid fa-user text-2xl text-text hover:text-teal"></i>
+              <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
           </RouterLink>
           <!-- cart icon (placeholder for future payments) -->
           <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
-            <i class="fa-solid fa-cart-shopping text-2xl text-text hover:text-teal"></i>
+            <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
           </RouterLink>
         </div>
 
         <!-- Mobile menu button -->
         <button
-          class="md:hidden rounded-lg px-3 py-2 text-text/80 hover:text-text"
+          class="md:hidden rounded-md px-3 py-2 text-text"
           @click="menuOpen = !menuOpen"
           aria-label="Toggle menu"
         >
           <!-- burger -->
-          <svg v-if="!menuOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
+           <i v-if="!menuOpen" class="fa-solid fa-bars"></i>
+
+
           <!-- close -->
-          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
+           <i v-else class="fa-solid fa-xmark"></i>
+
         </button>
       </div>
 
       <!-- Mobile nav panel -->
-      <div v-if="menuOpen" class="md:hidden border-t border-brand/10 px-4 sm:px-6 py-3 font-body">
+      <div v-if="menuOpen" class="md:hidden border-t border-teal px-4 sm:px-6 py-3 font-body">
         <div class="flex flex-col gap-3">
-          <RouterLink to="/" class="py-1 hover:text-text">Home</RouterLink>
+          <RouterLink to="/" class="py-1 hover:text-text">Rases</RouterLink>
           <RouterLink to="/participants" class="py-1 hover:text-text">Runners</RouterLink>
-          <RouterLink to="/auth/login" class="py-1 hover:text-text">Register or login</RouterLink>
+          <RouterLink to="/auth/login" class="py-1 hover:text-text">Sign in</RouterLink>
           <RouterLink v-if="isAuthed" to="/profile" class="py-1 hover:text-text">My profile</RouterLink>
         </div>
       </div>

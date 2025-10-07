@@ -13,7 +13,7 @@ const props = defineProps({
 
 <template>
   <article
-    class="group relative flex flex-col rounded-md text-text w-full sm:w-1/2 max-w-[520px] xl:max-w-[560px] mx-auto
+    class="group relative flex flex-col rounded-md text-text w-full  max-w-[520px] xl:max-w-[560px] mx-auto
            ring-1 ring-teal/40 transition  hover:brightness-110  hover:bg-teal/10 hover:ring-offset-2  hover:ring-offset-bg hover:ring-teal hover:-translate-y-0.5"
   >
     <!-- top media block (image or brand gradient) -->
@@ -23,8 +23,8 @@ const props = defineProps({
     </div>
 
     <!-- body -->
-     <div class="flex flex-col lg:flex-row p-6  justify-between items-end sm:items-stretch">
-    <div class="gap-6 p-6 sm:p-6 ">
+     <div class="flex flex-col sm:flex-row p-6 gap-6 justify-between items-center sm:items-stretch">
+    <div class="p-2 flex-1">
       <h3 class="font-title text-xl sm:text-2xl text-accent mb-2">{{ title }}</h3>
       <ul class="font-body text-sm sm:text-base text-text/80 space-y-1  whitespace-nowrap">
         <li v-if="length"><span class="text-text font-semibold">Length</span> • {{ length }}</li>
@@ -34,7 +34,7 @@ const props = defineProps({
     </div>
 
     <!-- action -->
-    <div class="p-6 pt-0 sm:self-end">
+    <div class=" p-2 sm:self-end ">
       <RouterLink v-if="to" :to="to">
         <BaseButton>View race</BaseButton>
       </RouterLink>
