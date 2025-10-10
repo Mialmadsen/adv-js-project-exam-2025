@@ -1,7 +1,8 @@
 // --- Imports ---
 import { ref, computed } from "vue"
-import { firebaseApp } from './firebase.js'
+import { firebaseApp, db } from './firebase.js'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
 
 // --- Firebase Auth Setup ---
 const auth = getAuth(firebaseApp)
@@ -19,13 +20,11 @@ onAuthStateChanged(auth, (user) => {
 
 // --- Login Function ---
 const login = async (email, password) => {
-    console.log("Attempting to log in with email: ", email)
     loading.value = true
     authError.value = null
     try {
         await signInWithEmailAndPassword(auth, email, password)
-    }
-    catch(error) {
+    } catch(error) {
         let errorMessage = "";
         switch (error.code) {
           case "auth/invalid-email":
@@ -47,10 +46,8 @@ const login = async (email, password) => {
             errorMessage = "Login failed. Please try again.";
         }
         console.error(errorMessage);
-        return errorMessage; // can set this into form validation state
-        // authError.value = error.message
-    }
-    finally {
+        authError.value = errorMessage
+    } finally {
         loading.value = false
     }
 }
@@ -61,19 +58,25 @@ const register = async (email, password) => {
     authError.value = null
 
     try {
-        await createUserWithEmailAndPassword(auth, email, password)
-    }
-    catch (error) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user
+
+        // --- Opret dokument i Firestore automatisk med role = "user" ---
+        await setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            role: "user",
+            createdAt: new Date()
+        })
+
+    } catch (error) {
         authError.value = error.message
-    }
-    finally {
+    } finally {
         loading.value = false
     }
 }
 
 // --- Logout Function ---
 const logout = async (routerInstance) => {
-    console.log("Logout of this mail: ", currentUser.value?.email)
     loading.value = true
     authError.value = null
     try {
@@ -81,11 +84,9 @@ const logout = async (routerInstance) => {
         if (routerInstance) {
             routerInstance.push('/')  // redirect to home after logout
         }
-    }
-    catch (error) {
+    } catch (error) {
         authError.value = error.message
-    }
-    finally {
+    } finally {
         loading.value = false
     }
 }

@@ -2,7 +2,7 @@
   <!-- === Outer Container === -->
   <div class="min-h-screen flex items-center justify-center bg-[var(--color-bg)] font-body">
     <div class="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8 w-full max-w-md">
-      
+
       <!-- === LOGIN SECTION === -->
       <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Login</h2>
       <form @submit.prevent="loginUser" class="space-y-4">
@@ -71,19 +71,20 @@
       <div v-if="isLoggedIn" class="mt-6 text-center text-sm text-gray-700">
         Logged in as: 
         <span class="font-semibold text-[var(--color-brand)]">{{ currentUser?.email }}</span>
+        <div>Role: <span class="font-semibold">{{ role }}</span></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// --- Imports and Setup ---
 import { ref } from 'vue'
 import { useAuth } from '../modules/useAuth'
+import { useRole } from '../composables/useRole'
 import BaseButton from '@/components/BaseButton.vue'
 
-// --- Auth State and Methods ---
 const { login, register, authError, loading, isLoggedIn, currentUser } = useAuth()
+const { role, updateRole } = useRole()
 
 // --- Form State ---
 const email = ref('')
@@ -92,25 +93,18 @@ const regEmail = ref('')
 const regPassword = ref('')
 
 // --- Login Handler ---
-const loginUser = () => {
-  login(email.value, password.value)
+const loginUser = async () => {
+  await login(email.value, password.value)
+  await updateRole() // sørger for at role opdateres efter login
 }
 
 // --- Register Handler ---
-const registerUser = () => {
-  register(regEmail.value, regPassword.value)
+const registerUser = async () => {
+  await register(regEmail.value, regPassword.value)
+  await updateRole() // sørger for at role opdateres efter registrering
 }
 </script>
 
-<style>
-/* === Optional Styling for LoginView === */
-.login-view {
-  max-width: 400px;
-  margin: 20px auto;
-}
-
-.error {
-  color: red;
-  margin-top: 16px;
-}
+<style scoped>
+/* Optional styling for LoginView */
 </style>
