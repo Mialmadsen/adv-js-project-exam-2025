@@ -12,7 +12,7 @@ import AppHeader from '@/components/layout/AppHeader.vue';
     <template #header>
       <AppHeader />
     </template>
-
+    
     <RouterView />
   </AppShell>
 </template>
