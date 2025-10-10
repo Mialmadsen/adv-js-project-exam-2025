@@ -1,18 +1,23 @@
+// --- Imports ---
 import { ref, computed } from "vue"
 import { firebaseApp } from './firebase.js'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
 
-const auth = getAuth (firebaseApp)
+// --- Firebase Auth Setup ---
+const auth = getAuth(firebaseApp)
 
-const currentUser = ref (null)
-const isLoggedIn = computed(() => !!currentUser.value);
-const authError = ref (null)
-const loading = ref (false)
+// --- Reactive State ---
+const currentUser = ref(null)
+const isLoggedIn = computed(() => !!currentUser.value)
+const authError = ref(null)
+const loading = ref(false)
 
+// --- Listen for Auth State Changes ---
 onAuthStateChanged(auth, (user) => {
     currentUser.value = user
 })
 
+// --- Login Function ---
 const login = async (email, password) => {
     console.log("Attempting to log in with email: ", email)
     loading.value = true
@@ -50,24 +55,23 @@ const login = async (email, password) => {
     }
 }
 
-const register = async ( email, password ) => {
+// --- Register Function ---
+const register = async (email, password) => {
     loading.value = true
     authError.value = null
 
     try {
         await createUserWithEmailAndPassword(auth, email, password)
     }
-
     catch (error) {
         authError.value = error.message
-
     }
     finally {
         loading.value = false
     }
 }
 
-
+// --- Logout Function ---
 const logout = async (routerInstance) => {
     console.log("Logout of this mail: ", currentUser.value?.email)
     loading.value = true
@@ -86,6 +90,7 @@ const logout = async (routerInstance) => {
     }
 }
 
+// --- Export useAuth Composable ---
 export function useAuth() {
     return {
         currentUser,

@@ -1,9 +1,10 @@
 <template>
+  <!-- === Outer Container === -->
   <div class="min-h-screen flex items-center justify-center bg-[var(--color-bg)] font-body">
     <div class="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8 w-full max-w-md">
-      <!-- LOGIN -->
+      
+      <!-- === LOGIN SECTION === -->
       <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Login</h2>
-
       <form @submit.prevent="loginUser" class="space-y-4">
         <input
           type="email"
@@ -28,7 +29,7 @@
         </BaseButton>
       </form>
 
-      <!-- INFO TEKST -->
+      <!-- === INFO TEXT === -->
       <p class="text-center text-sm text-gray-700 mt-8">
         Don't have a profile yet?
         <span class="font-semibold text-[var(--color-accent)]"> Register here below!</span>
@@ -36,9 +37,8 @@
 
       <div class="border-t border-gray-300 my-8"></div>
 
-      <!-- REGISTER -->
+      <!-- === REGISTER SECTION === -->
       <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Register</h2>
-
       <form @submit.prevent="registerUser" class="space-y-4">
         <input
           type="email"
@@ -63,7 +63,7 @@
         </BaseButton>
       </form>
 
-      <!-- ERROR OG STATUS -->
+      <!-- === ERROR AND STATUS MESSAGES === -->
       <div v-if="authError" class="mt-6 text-center text-[var(--color-danger)] font-semibold">
         {{ authError }}
       </div>
@@ -76,32 +76,34 @@
   </div>
 </template>
 
-
-
 <script setup>
-
+// --- Imports and Setup ---
 import { ref } from 'vue'
-import {useAuth} from '../modules/useAuth'
+import { useAuth } from '../modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
 
-const { login,register, authError, loading, isLoggedIn, currentUser } = useAuth()
+// --- Auth State and Methods ---
+const { login, register, authError, loading, isLoggedIn, currentUser } = useAuth()
 
+// --- Form State ---
 const email = ref('')
 const password = ref('')
 const regEmail = ref('')
 const regPassword = ref('')
 
+// --- Login Handler ---
 const loginUser = () => {
   login(email.value, password.value)
 }
 
+// --- Register Handler ---
 const registerUser = () => {
   register(regEmail.value, regPassword.value)
 }
-
 </script>
 
 <style>
+/* === Optional Styling for LoginView === */
 .login-view {
   max-width: 400px;
   margin: 20px auto;
@@ -111,5 +113,4 @@ const registerUser = () => {
   color: red;
   margin-top: 16px;
 }
-
 </style>
