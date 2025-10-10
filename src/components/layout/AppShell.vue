@@ -1,34 +1,37 @@
 <script setup>
+// --- Import Container layout component ---
 import Container from '@/components/layout/Container.vue'
-import { useRole } from '@/composables/useRole'
 
+// --- Import role state and setter from useRole composable ---
+import { useRole } from '@/composables/useRole'
 const { role, setRole } = useRole()
 
-// Dev-only flag
+// --- Dev-only flag to show role switcher in development mode ---
 const isDev = import.meta.env.DEV
 </script>
 
 <template>
   <div class="min-h-screen w-full bg-bg text-text">
-    <!-- Header -->
+    <!-- === Header Slot (for navigation/header content) === -->
     <header class="sticky top-0 z-50 w-full max-auto">
       <slot name="header" />
     </header>
 
-    <!-- Main content -->
+    <!-- === Main Content Slot (page content) === -->
     <main>
       <Container>
         <slot />
       </Container>
     </main>
 
-    <!-- Footer -->
+    <!-- === Footer with copyright and dev-only role switcher === -->
     <footer class="mt-12 border-t border-brand/10">
       <Container>
         <div class="py-6 flex items-center justify-between text-sm text-text/70 gap-4">
+          <!-- Copyright -->
           <div>© SwimRunIF 2025</div>
 
-          <!-- Dev-only role switcher -->
+          <!-- Dev-only: Role switcher for testing different roles -->
           <div v-if="isDev">
             <label class="inline-flex items-center gap-2">
               <span class="font-body">Role:</span>
@@ -43,7 +46,6 @@ const isDev = import.meta.env.DEV
               </select>
             </label>
           </div>
-
         </div>
       </Container>
     </footer>

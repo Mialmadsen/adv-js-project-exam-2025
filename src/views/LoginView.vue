@@ -106,5 +106,5 @@ const registerUser = async () => {
 </script>
 
 <style scoped>
-/* Optional styling for LoginView */
+
 </style>

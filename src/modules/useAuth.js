@@ -1,24 +1,24 @@
-// --- Imports ---
+// --- Imports: Vue reactivity, Firebase app, Auth & Firestore functions ---
 import { ref, computed } from "vue"
 import { firebaseApp, db } from './firebase.js'
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 
-// --- Firebase Auth Setup ---
+// --- Firebase Auth Setup: Get auth instance from Firebase app ---
 const auth = getAuth(firebaseApp)
 
-// --- Reactive State ---
+// --- Reactive State: Track user, login status, errors, and loading state ---
 const currentUser = ref(null)
 const isLoggedIn = computed(() => !!currentUser.value)
 const authError = ref(null)
 const loading = ref(false)
 
-// --- Listen for Auth State Changes ---
+// --- Listen for Auth State Changes: Update currentUser when login/logout happens ---
 onAuthStateChanged(auth, (user) => {
     currentUser.value = user
 })
 
-// --- Login Function ---
+// --- Login Function: Sign in with email and password, handle errors and loading ---
 const login = async (email, password) => {
     loading.value = true
     authError.value = null
@@ -52,7 +52,7 @@ const login = async (email, password) => {
     }
 }
 
-// --- Register Function ---
+// --- Register Function: Create user, add user doc to Firestore with default role ---
 const register = async (email, password) => {
     loading.value = true
     authError.value = null
@@ -61,7 +61,7 @@ const register = async (email, password) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
 
-        // --- Opret dokument i Firestore automatisk med role = "user" ---
+        // --- Create Firestore user document with role "user" ---
         await setDoc(doc(db, "users", user.uid), {
             email: user.email,
             role: "user",
@@ -75,7 +75,7 @@ const register = async (email, password) => {
     }
 }
 
-// --- Logout Function ---
+// --- Logout Function: Sign out and optionally redirect to home ---
 const logout = async (routerInstance) => {
     loading.value = true
     authError.value = null
@@ -91,7 +91,7 @@ const logout = async (routerInstance) => {
     }
 }
 
-// --- Export useAuth Composable ---
+// --- Export useAuth Composable: Expose state and auth functions for use in components ---
 export function useAuth() {
     return {
         currentUser,
