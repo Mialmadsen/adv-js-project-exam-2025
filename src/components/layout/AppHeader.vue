@@ -20,8 +20,7 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
   <div class="p-2 w-full">
     <!-- the rounded header bar -->
     <div
-      class="rounded-md bg-teal/30  backdrop-blur shadow-xsm "
-    >
+      class="rounded-md bg-teal/30  backdrop-blur-[2px] shadow-xsm border border-teal-400/10" >
       <div class="flex items-center justify-between px-4 sm:px-6 py-3">
         <!-- Logo / Brand -->
         <RouterLink to="/" >
@@ -29,7 +28,7 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
         </RouterLink>
 
         <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-8 font-body text-lg text-text">
+        <nav class="hidden md:flex items-center gap-8 font-body font-semibold text-lg text-text">
 
                             <!-- Races: word scrolls menu -->
             <MenuDropdown>
@@ -92,12 +91,12 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
   <MenuDropdown align="right">
     <!-- trigger button -->
     <template #trigger="{ toggle }">
-      <div class="flex items-center gap-2 text-lg">
+      <div class="flex items-center gap-2 text-lg ">
           <div class="h-8 w-8 rounded-full bg-teal ring-2 ring-teal
-                              flex items-center justify-center text-text font-title">
+                              flex items-center justify-center text-text  font-title">
                     {{ initial }}
                   </div>
-                  <span class="font-body">Hi, {{ displayName }}</span>
+                  <span class="font-body font-semibold">Hi, {{ displayName }}</span>
                 <button
                   class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-teal/40 text-text"
                   @click="toggle"
@@ -158,7 +157,7 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
       </div>
 
       <!-- Mobile nav panel -->
-      <div v-if="menuOpen" class="md:hidden border-t border-teal px-4 sm:px-6 py-3 font-body">
+      <div v-if="menuOpen" class="md:hidden border-t border-teal px-4 sm:px-6 py-3 font-body font-semibold">
         <ul class="flex flex-col gap-3">
           <ul> <RouterLink to="/" class="py-1 hover:text-text">Rases</RouterLink>
           <li> <RouterLink

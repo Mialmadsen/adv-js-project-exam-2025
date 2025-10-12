@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import SeedView from '@/views/dev/SeedView.vue'
 // Lazy views
 const HomeView         = () => import('@/views/HomeView.vue')
 const RaceDetailView   = () => import('@/views/RaceDetailView.vue')
@@ -26,6 +27,9 @@ const routes = [
   { path: '/profile',       name: 'profile',  component: ProfileView, meta: { requiresAuth: true } },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
+  ...(import.meta.env.DEV
+    ? [{ path: '/dev/seed', name: 'dev-seed', component: SeedView }]
+    : []),
 ]
 
 export default createRouter({

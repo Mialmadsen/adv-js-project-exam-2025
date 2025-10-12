@@ -14,7 +14,7 @@ const props = defineProps({
 <template>
   <article
     class="group relative flex flex-col rounded-md text-text w-full  max-w-[520px] xl:max-w-[560px] mx-auto
-           ring-1 ring-teal/40 transition  hover:brightness-110  hover:bg-teal/10 hover:ring-offset-2  hover:ring-offset-bg hover:ring-teal hover:-translate-y-0.5"
+           ring-1 ring-teal/40 transition  hover:brightness-110  hover:bg-teal/10 hover:ring-offset-2  hover:ring-offset-bg hover:ring-teal/20 hover:-translate-y-0.5"
   >
     <!-- top media block (image or brand gradient) -->
     <div class="relative mx-6 -mt-8 aspect-[16/9]  overflow-hidden rounded-md shadow-lg">

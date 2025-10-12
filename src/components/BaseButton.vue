@@ -16,7 +16,7 @@ const props = defineProps({
     class="inline-flex w-full sm:w-auto items-center justify-center rounded-md
            font-title font-semibold uppercase
            bg-teal text-text text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 transition duration-200
-           hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal
+           hover:brightness-110 hover:ring-1 hover:ring-offset-2 hover:ring-teal/20 hover:border-teal/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal
            disabled:opacity-60 disabled:pointer-events-none"
   >
     <slot>Button</slot>
@@ -29,7 +29,7 @@ const props = defineProps({
     class="inline-flex w-full sm:w-auto items-center justify-center rounded-md
            font-title font-semibold uppercase text-sm sm:text-base md:text-lg tracking-wide md:tracking-wider border border-teal
           text-text px-6 py-3 sm:px-8 sm:py-3.5 md:px-10 md:py-4 transition duration-200
-           hover:brightness-110  hover:bg-teal/10 hover:ring-1 hover:ring-offset-2 hover:ring-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ring-offset-bg
+           hover:brightness-110  hover:bg-teal/10 hover:ring-1 hover:ring-offset-2 hover:ring-teal/20 hover:border-teal/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal focus-visible:ring-offset-2 ring-offset-bg
            disabled:opacity-60 disabled:pointer-events-none"
   >
     <slot>Button</slot>
