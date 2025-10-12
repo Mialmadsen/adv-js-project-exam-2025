@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import logoUrl from '@/assets/Logo.svg'
 import MenuDropdown from '@/components/MenuDropdown.vue'
 import { useRole } from '@/composables/useRole'
+import AuthButton from '@/components/AuthButton.vue'
 
 /* mobile nav toggle */
 const menuOpen = ref(false)
@@ -79,6 +80,7 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
 
         <!-- Right icons -->
         <div class="hidden md:flex items-center gap-5 text-text/80">
+
             <!-- if NOT authed: show login -->
             <template v-if="!isAuthed">
               <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
@@ -88,6 +90,10 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
 
   <!-- if authed: show avatar + greeting + button -->
           <template v-else>
+            <AuthButton />
+
+
+
   <MenuDropdown align="right">
     <!-- trigger button -->
     <template #trigger="{ toggle }">
