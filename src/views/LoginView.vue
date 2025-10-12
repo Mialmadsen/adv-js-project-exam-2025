@@ -1,76 +1,76 @@
 <template>
   <!-- === Outer Container === -->
-  <div class="min-h-screen flex items-center justify-center bg-[var(--color-bg)] font-body">
-    <div class="bg-white/70 backdrop-blur-md shadow-2xl rounded-2xl p-8 w-full max-w-md">
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="bg-on-brand-text/70 backdrop-blur-[2px] shadow-md rounded-md p-8 w-full max-w-md">
 
       <!-- === LOGIN SECTION === -->
-      <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Login</h2>
+      <h2 class="text-3xl font-title font-bold text-center text-accent mb-8">Sign in</h2>
       <form @submit.prevent="loginUser" class="space-y-4">
         <input
           type="email"
           v-model="email"
           placeholder="Email"
           required
-          class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
+          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
         />
         <input
           type="password"
           v-model="password"
           placeholder="Password"
           required
-          class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
+          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
         />
         <BaseButton
           type="submit"
           :disabled="loading"
-          class="w-full bg-gradient-to-r from-[var(--color-accent)] via-[var(--color-teal)] to-[var(--color-cyan)] text-white font-semibold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+          class="w-full bg-gradient-to-r from-accent via-teal to-cyan text-on-brand-text  font-semibold py-3 rounded-md hover:opacity-90 transition disabled:opacity-50"
         >
-          Login
+          Sign in
         </BaseButton>
       </form>
 
       <!-- === INFO TEXT === -->
-      <p class="text-center text-sm text-gray-700 mt-8">
+      <p class="text-center text-sm text-text/50 mt-8">
         Don't have a profile yet?
-        <span class="font-semibold text-[var(--color-accent)]"> Register here below!</span>
+        <span class="font-semibold text-accent">Sign up here below!</span>
       </p>
 
-      <div class="border-t border-gray-300 my-8"></div>
+      <div class="border-t border-text/10 my-8"></div>
 
       <!-- === REGISTER SECTION === -->
-      <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Register</h2>
+      <h2 class="text-3xl font-title font-bold text-center text-[var(--color-accent)] mb-8">Sign up</h2>
       <form @submit.prevent="registerUser" class="space-y-4">
         <input
           type="email"
           v-model="regEmail"
           placeholder="Email"
           required
-          class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
+          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
         />
         <input
           type="password"
           v-model="regPassword"
           placeholder="Password"
           required
-          class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-accent)] focus:outline-none"
+          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent  focus:outline-none"
         />
         <BaseButton
           type="submit"
           :disabled="loading"
-          class="w-full bg-gradient-to-r from-[var(--color-accent)] via-[var(--color-teal)] to-[var(--color-cyan)] text-white font-semibold py-3 rounded-xl hover:opacity-90 transition disabled:opacity-50"
+          class="w-full bg-gradient-to-r from-accent via-teal to-cyan text-on-brand-text font-semibold py-3 rounded-md hover:opacity-90 transition disabled:opacity-50"
         >
-          Register
+          Sign up
         </BaseButton>
       </form>
 
       <!-- === ERROR AND STATUS MESSAGES === -->
-      <div v-if="authError" class="mt-6 text-center text-[var(--color-danger)] font-semibold">
+      <div v-if="authError" class="mt-6 text-center text-danger font-semibold">
         {{ authError }}
       </div>
 
-      <div v-if="isLoggedIn" class="mt-6 text-center text-sm text-gray-700">
-        Logged in as: 
-        <span class="font-semibold text-[var(--color-brand)]">{{ currentUser?.email }}</span>
+      <div v-if="isLoggedIn" class="mt-6 text-center text-sm text-text/70">
+        Logged in as:
+        <span class="font-semibold text-brand">{{ currentUser?.email }}</span>
         <div>Role: <span class="font-semibold">{{ role }}</span></div>
       </div>
     </div>

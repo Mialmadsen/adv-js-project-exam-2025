@@ -134,7 +134,7 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
         class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
         @click="setRole('guest'); close()"
       >
-        <i class="fa-solid fa-right-from-bracket"></i> Log out
+        <i class="fa-solid fa-right-from-bracket"></i> Sign out
       </button>
     </template>
   </MenuDropdown>
