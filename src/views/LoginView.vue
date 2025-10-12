@@ -68,23 +68,22 @@
         {{ authError }}
       </div>
 
-      <div v-if="isLoggedIn" class="mt-6 text-center text-sm text-text/70">
-        Logged in as:
-        <span class="font-semibold text-brand">{{ currentUser?.email }}</span>
-        <div>Role: <span class="font-semibold">{{ role }}</span></div>
       </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useAuth } from '../modules/useAuth'
-import { useRole } from '../composables/useRole'
+import { ref, watchEffect } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useAuth } from '@/modules/useAuth'
+import { useRole } from '@/composables/useRole'
 import BaseButton from '@/components/BaseButton.vue'
 
-const { login, register, authError, loading, isLoggedIn, currentUser } = useAuth()
-const { role, updateRole } = useRole()
+const { login, register, authError, loading, isLoggedIn } = useAuth()
+const { updateRole } = useRole()
+
+const router = useRouter()
+const route  = useRoute()
 
 // --- Form State ---
 const email = ref('')
@@ -92,19 +91,30 @@ const password = ref('')
 const regEmail = ref('')
 const regPassword = ref('')
 
+// go to ?redirect=... (if present) otherwise home
+function goAfterAuth() {
+  const target = (route.query.redirect && String(route.query.redirect)) || '/'
+  router.push(target)
+}
+
 // --- Login Handler ---
 const loginUser = async () => {
   await login(email.value, password.value)
-  await updateRole() // sørger for at role opdateres efter login
+  await updateRole()
+  if (isLoggedIn.value) goAfterAuth()
 }
 
 // --- Register Handler ---
 const registerUser = async () => {
   await register(regEmail.value, regPassword.value)
-  await updateRole() // sørger for at role opdateres efter registrering
+  await updateRole()
+  if (isLoggedIn.value) goAfterAuth()
 }
+
+// If already signed in, don't stay on this page
+watchEffect(() => {
+  if (isLoggedIn.value) router.replace('/')
+})
 </script>
 
-<style scoped>
 
-</style>

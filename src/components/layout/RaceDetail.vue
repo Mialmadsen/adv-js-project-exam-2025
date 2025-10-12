@@ -41,7 +41,7 @@ const props = defineProps({
       </div>
     </header>
 
-    <!-- Key facts -->
+
     <!-- Facts bar -->
 <section
   class="bg-teal/30 rounded-md text-neutral-600  backdrop-blur-[1px] border border-teal-400/10 shadow-xsm"
@@ -127,7 +127,7 @@ const props = defineProps({
     <BaseButton variant="solid" size="md">Register</BaseButton>
   </RouterLink>
 
-  <!-- NEW: go to Participants (optionally pass the race as a query) -->
+  <!-- NEW: go to Participants  -->
   <RouterLink :to="{ name: 'participants', query: { race: race.id } }" aria-label="View participants">
     <BaseButton variant="outline" size="md">Participants</BaseButton>
   </RouterLink>

@@ -3,16 +3,20 @@ import { ref, computed } from 'vue'
 import logoUrl from '@/assets/Logo.svg'
 import MenuDropdown from '@/components/MenuDropdown.vue'
 import { useRole } from '@/composables/useRole'
-import AuthButton from '@/components/AuthButton.vue'
+import { useAuth } from '@/modules/useAuth'
 
 /* mobile nav toggle */
 const menuOpen = ref(false)
 
 /* role-based header bits */
 const { isUser, isAdmin } = useRole()
+const { currentUser, logout } = useAuth()
 const isAuthed = computed(() => isUser.value || isAdmin.value)
-const displayName = computed(() => (isAdmin.value ? 'Admin' : 'Athlete')) // placeholder until real profile
-const initial = computed(() => displayName.value?.[0] ?? 'U')
+const displayName = computed(() =>isAdmin.value
+  ? 'Admin'
+ : (currentUser.value?.email?.split('@')[0] ?? 'Athlete')
+)
+const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
 </script>
 
@@ -78,119 +82,142 @@ const initial = computed(() => displayName.value?.[0] ?? 'U')
 
         </nav>
 
-        <!-- Right icons -->
-        <div class="hidden md:flex items-center gap-5 text-text/80">
+      <!-- Right side -->
+<div class="hidden md:flex items-center gap-5 text-text/80">
+  <!-- GUEST: show login icon -->
+  <template v-if="!isAuthed">
+    <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
+      <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
+    </RouterLink>
+  </template>
 
-            <!-- if NOT authed: show login -->
-            <template v-if="!isAuthed">
-              <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
-                <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
-              </RouterLink>
-            </template>
+  <!-- AUThed: avatar + greeting + dropdown -->
+  <template v-else>
+    <MenuDropdown align="right">
+      <!-- trigger -->
+      <template #trigger="{ toggle }">
+        <button
+          class="flex items-center gap-2 rounded-md px-2 py-1 text-text"
+          @click="toggle"
+          aria-label="Open profile menu"
+        >
+          <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 hover:bg-teal ring-teal flex items-center justify-center text-text font-title">
+            {{ initial }}
+          </div>
+          <span class="font-body font-semibold">Hi, {{ displayName }}</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </template>
 
-  <!-- if authed: show avatar + greeting + button -->
-          <template v-else>
-            <AuthButton />
+      <!-- menu -->
+      <template #default="{ close }">
+        <RouterLink
+          to="/profile"
+          class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+          @click="close()"
+        >
+          <i class="fa-solid fa-passport"></i> Profile
+        </RouterLink>
 
+        <button
+          class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+          @click="logout(); close()"
+        >
+          <i class="fa-solid fa-right-from-bracket"></i> Sign out
+        </button>
+      </template>
+    </MenuDropdown>
+  </template>
 
-
-  <MenuDropdown align="right">
-    <!-- trigger button -->
-    <template #trigger="{ toggle }">
-      <div class="flex items-center gap-2 text-lg ">
-          <div class="h-8 w-8 rounded-full bg-teal ring-2 ring-teal
-                              flex items-center justify-center text-text  font-title">
-                    {{ initial }}
-                  </div>
-                  <span class="font-body font-semibold">Hi, {{ displayName }}</span>
-                <button
-                  class="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-teal/40 text-text"
-                  @click="toggle"
-                  aria-label="Open profile menu"
-
-                >
-
-
-                  <i class="fa-solid fa-chevron-down"
-                    ></i>
-                </button>
-
-
-      </div>
-
-    </template>
-
-    <!-- menu items -->
-    <template  #default="{ close }" >
-      <RouterLink
-        to="/profile"
-        class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-        @click="close()"
-      >
-        <i class="fa-solid fa-passport"></i> Profile
-      </RouterLink>
-
-      <button
-        class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-        @click="setRole('guest'); close()"
-      >
-        <i class="fa-solid fa-right-from-bracket"></i> Sign out
-      </button>
-    </template>
-  </MenuDropdown>
-</template>
-
-  <!-- register cart -->
-          <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
-            <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
-          </RouterLink>
-      </div>
+  <!-- checkout cart -->
+  <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
+    <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
+  </RouterLink>
+</div>
 
         <!-- Mobile menu button -->
-        <button
-          class="md:hidden rounded-md px-3 py-2 text-text"
+          <!-- Mobile: avatar + greeting (no chevron, no dropdown) -->
+<div v-if="isAuthed" class="md:hidden flex items-center gap-2 text-text/90">
+  <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 ring-teal grid place-items-center font-title">
+    {{ initial }}
+  </div>
+  <span class="text-lg font-semibold">Hi, {{ displayName }}</span>
+</div>
+
+          <button
+          class="md:hidden rounded-md px-3 py-2 text-text "
           @click="menuOpen = !menuOpen"
           aria-label="Toggle menu"
         >
           <!-- burger -->
-           <i v-if="!menuOpen" class="fa-solid fa-bars"></i>
+           <i v-if="!menuOpen" class="fa-solid fa-bars text-2xl"></i>
 
 
           <!-- close -->
-           <i v-else class="fa-solid fa-xmark"></i>
+           <i v-else class="fa-solid fa-xmark text-2xl"></i>
 
         </button>
+
       </div>
 
       <!-- Mobile nav panel -->
-      <div v-if="menuOpen" class="md:hidden border-t border-teal px-4 sm:px-6 py-3 font-body font-semibold">
-        <ul class="flex flex-col gap-3">
-          <ul> <RouterLink to="/" class="py-1 hover:text-text">Rases</RouterLink>
-          <li> <RouterLink
-                    :to="{ name: 'race', params: { id: 'hard' } }"
-                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+      <div v-if="menuOpen" class="md:hidden border-top border-teal px-4 sm:px-6 py-3 font-body font-semibold">
+  <ul class="flex flex-col gap-3">
 
-                  ><i class="fa-solid fa-person-swimming"></i>
-                    SwimRun HARD
-                  </RouterLink></li>
-          <li> <RouterLink
-                    :to="{ name: 'race', params: { id: 'light' } }"
-                    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+       <!-- Races group -->
+    <li>
+      <RouterLink to="/" class="py-1 hover:text-text" @click="menuOpen = false">Races</RouterLink>
+      <ul class="mt-1">
+        <li>
+          <RouterLink
+            :to="{ name: 'race', params: { id: 'hard' } }"
+            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+            @click="menuOpen = false"
+          >
+            <i class="fa-solid fa-person-swimming"></i> SwimRun HARD
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            :to="{ name: 'race', params: { id: 'light' } }"
+            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+            @click="menuOpen = false"
+          >
+            <i class="fa-solid fa-person-swimming"></i> SwimRun LIGHT
+          </RouterLink>
+        </li>
+      </ul>
+    </li>
 
-                  ><i class="fa-solid fa-person-swimming"></i>
-                    SwimRun LIGHT
-                  </RouterLink></li>
-          </ul>
+    <li>
+      <RouterLink to="/participants" class="py-1 hover:text-text" @click="menuOpen = false">Runners</RouterLink>
+    </li>
 
-          <li><RouterLink to="/participants" class="py-1 hover:text-text">Runners</RouterLink></li>
-          <li><RouterLink to="/auth/login" class="py-1 hover:text-text">Sign in</RouterLink></li>
-          <li><RouterLink v-if="isAuthed" to="/profile" class="py-1 hover:text-text">My profile</RouterLink></li>
+    <!-- Guest-only -->
+    <li v-if="!isAuthed">
+      <RouterLink to="/auth/login" class="py-1 hover:text-text" @click="menuOpen = false">Sign in</RouterLink>
+    </li>
 
+    <!-- Authed-only -->
+    <li v-else>
+      <RouterLink to="/profile" class="py-1 hover:text-text" @click="menuOpen = false"><i class="fa-solid fa-passport"></i>My profile</RouterLink>
+    </li>
+    <li v-if="isAuthed">
+      <button
+        class="py-1 hover:text-text text-left"
+        @click="logout(); menuOpen = false"
+      ><i class="fa-solid fa-right-from-bracket"></i>
 
-
-
-        </ul>
-      </div>
+        Sign out
+      </button>
+    </li>
+    <li v-if="isAuthed">
+       <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text"  @click="menuOpen = false">
+    <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>Checkout
+  </RouterLink>
+    </li>
+  </ul>
+</div>
     </div>
   </div>
 </template>

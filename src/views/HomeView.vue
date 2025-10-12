@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import BaseButton from '@/components/BaseButton.vue'
+
 import BaseCard   from '@/components/BaseCard.vue'
 import { useRaces } from '@/composables/useRaces'
 
@@ -33,9 +33,5 @@ onMounted(loadAll)
     </div>
   </section>
 
-  <!-- your demo buttons (unchanged) -->
-  <div class="flex flex-col gap-2 w-1/8">
-    <BaseButton variant="solid">Solid</BaseButton>
-    <BaseButton variant="outline">Outline</BaseButton>
-  </div>
+
 </template>

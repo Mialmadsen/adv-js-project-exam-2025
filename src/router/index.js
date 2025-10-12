@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SeedView from '@/views/dev/SeedView.vue'
+import { installAuthGuards } from './guards/authGuard'
+
 // Lazy views
 const HomeView         = () => import('@/views/HomeView.vue')
 const RaceDetailView   = () => import('@/views/RaceDetailView.vue')
@@ -11,28 +13,33 @@ const ProfileView      = () => import('@/views/ProfileView.vue')
 const NotFoundView     = () => import('@/views/NotFoundView.vue')
 
 const routes = [
-  { path: '/',            name: 'home',     component: HomeView },
+  { path: '/', name: 'home', component: HomeView },
 
-  // Only race detail pages (linked from Home)
-  // Example ids we’ll use on Home: "hard" and "light"
-  { path: '/races/:id',   name: 'race',     component: RaceDetailView, props: true },
+  { path: '/races/:id', name: 'race', component: RaceDetailView, props: true },
 
-  { path: '/register/:raceId', name: 'register', component: RegisterView, props: true, meta: { requiresAuth: true } },
+  { path: '/register/:raceId', name: 'register', component: RegisterView, props: true,
+    meta: { requiresAuth: true } },
 
   { path: '/participants', name: 'participants', component: ParticipantsView },
 
-  { path: '/auth/login',    name: 'login',    component: LoginView,  meta: { guestOnly: true } },
-  { path: '/auth/signup',   name: 'signup',   component: SignupView, meta: { guestOnly: true } },
+  { path: '/auth/login',  name: 'login',  component: LoginView,  meta: { guestOnly: true } },
+  { path: '/auth/signup', name: 'signup', component: SignupView, meta: { guestOnly: true } },
 
-  { path: '/profile',       name: 'profile',  component: ProfileView, meta: { requiresAuth: true } },
+  { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
-  ...(import.meta.env.DEV
-    ? [{ path: '/dev/seed', name: 'dev-seed', component: SeedView }]
-    : []),
+
+  ...(import.meta.env.DEV ? [{ path: '/dev/seed', name: 'dev-seed', component: SeedView }] : []),
 ]
 
-export default createRouter({
+// 1) create the router
+const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+
+// 2) install guards ON the router (not on routes)
+installAuthGuards(router)
+
+// 3) export the router
+export default router
