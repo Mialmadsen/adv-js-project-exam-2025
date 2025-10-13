@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Montserrat:wght@600;700;800&display=swap");
 
 @import "tailwindcss";
-@import "@fortawesome/fontawesome-free/css/all.min.css"; 
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
 @theme {
@@ -30,6 +30,25 @@
 @utility font-title { font-family: var(--font-title); }
 @utility font-body  { font-family: var(--font-body); }
 @utility bg-gradient { background-image: var(--color-gradient); }
+
+@layer components {
+  /* Base input used across the app */
+  .ui-input {
+    @apply block w-full rounded-md p-3
+           border border-text/10
+           bg-transparent text-text placeholder:text-text/50
+           focus:outline-none focus:ring-2 focus:ring-accent
+           disabled:opacity-60 disabled:pointer-events-none;
+  }
+
+  /* Optional helpers */
+  .ui-label { @apply block mb-1 text-sm font-medium text-text/80; }
+  .ui-hint  { @apply mt-1 text-xs text-text/60; }
+  .ui-invalid { @apply ring-2 ring-danger/70 border-transparent; }
+
+  /* If you sometimes place an icon/button inside the field */
+  .ui-with-icon-left   { @apply pl-10; }
+  .ui-with-action-right{ @apply pr-10; }}
 
 
 html { font-family: var(--font-body); background: var(--color-bg); color: var(--color-fg); }

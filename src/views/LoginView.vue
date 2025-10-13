@@ -11,19 +11,19 @@
           v-model="email"
           placeholder="Email"
           required
-          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
+          class="ui-input"
         />
         <input
           type="password"
           v-model="password"
           placeholder="Password"
           required
-          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
+          class="ui-input"
         />
         <BaseButton
           type="submit"
           :disabled="loading"
-          class="w-full bg-gradient-to-r from-accent via-teal to-cyan text-on-brand-text  font-semibold py-3 rounded-md hover:opacity-90 transition disabled:opacity-50"
+
         >
           Sign in
         </BaseButton>
@@ -45,19 +45,19 @@
           v-model="regEmail"
           placeholder="Email"
           required
-          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent focus:outline-none"
+          class="ui-input"
         />
         <input
           type="password"
           v-model="regPassword"
           placeholder="Password"
           required
-          class="w-full p-3 border border-text/10 rounded-md focus:ring-2 focus:ring-accent  focus:outline-none"
+          class="ui-input"
         />
         <BaseButton
           type="submit"
           :disabled="loading"
-          class="w-full bg-gradient-to-r from-accent via-teal to-cyan text-on-brand-text font-semibold py-3 rounded-md hover:opacity-90 transition disabled:opacity-50"
+
         >
           Sign up
         </BaseButton>

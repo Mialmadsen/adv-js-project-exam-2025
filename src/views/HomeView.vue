@@ -2,7 +2,7 @@
 import { onMounted } from 'vue'
 
 import BaseCard   from '@/components/BaseCard.vue'
-import { useRaces } from '@/composables/useRaces'
+import { useRaces } from '@/composables/UseRaces'
 
 const { races, loading, error, loadAll } = useRaces()
 onMounted(loadAll)
