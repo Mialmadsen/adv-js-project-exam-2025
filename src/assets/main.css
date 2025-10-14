@@ -48,7 +48,13 @@
 
   /* If you sometimes place an icon/button inside the field */
   .ui-with-icon-left   { @apply pl-10; }
-  .ui-with-action-right{ @apply pr-10; }}
+  .ui-with-action-right{ @apply pr-10; }
+  .admin-card {
+    @apply rounded-md bg-on-brand-text/50  p-5 backdrop-blur-[2px] border border-teal/40 shadow-xs;
+  }
+}
+
+
 
 
 html { font-family: var(--font-body); background: var(--color-bg); color: var(--color-fg); }

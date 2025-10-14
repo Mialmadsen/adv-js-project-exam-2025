@@ -3,7 +3,7 @@ import BaseButton from '@/components/BaseButton.vue'
 
 const props = defineProps({
   title:     { type: String, default: '' },
-  length:    { type: String, default: '' },
+  length:    { type: Number, default: '' },
   location:  { type: String, default: '' },
   date:      { type: String, default: '' },
   to:        { type: [String, Object], default: null }, // RouterLink target
@@ -36,7 +36,7 @@ const props = defineProps({
     <!-- action -->
     <div class=" p-2 sm:self-end ">
       <RouterLink v-if="to" :to="to">
-        <BaseButton>View race</BaseButton>
+        <BaseButton size="lg">View race</BaseButton>
       </RouterLink>
     </div>
   </div>
