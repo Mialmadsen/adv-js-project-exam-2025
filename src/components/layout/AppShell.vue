@@ -2,12 +2,7 @@
 // --- Import Container layout component ---
 import Container from '@/components/layout/Container.vue'
 
-// --- Import role state and setter from useRole composable ---
-import { useRole } from '@/composables/useRole'
-const { role, setRole } = useRole()
 
-// --- Dev-only flag to show role switcher in development mode ---
-const isDev = import.meta.env.DEV
 </script>
 
 <template>
@@ -30,28 +25,10 @@ const isDev = import.meta.env.DEV
         <div class="py-6 flex items-center justify-between text-sm text-text/70 gap-4">
           <!-- Copyright -->
           <div>© SwimRunIF 2025</div>
-
-          <!-- Dev-only: Role switcher for testing different roles -->
-          <div v-if="isDev">
-            <label class="inline-flex items-center gap-2">
-              <span class="font-body">Role:</span>
-              <select
-                class="rounded-md border border-brand/30 bg-white/80 px-2 py-1 text-text"
-                :value="role"
-                @change="setRole($event.target.value)"
-              >
-                <option value="guest">Guest</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </label>
-          </div>
         </div>
       </Container>
     </footer>
   </div>
 </template>
 
-<style scoped>
-/* Optional styling */
-</style>
+

@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { collection, getDocs, query, orderBy } from 'firebase/firestore'
 import { db } from '@/modules/firebase'
 import BaseButton from '@/components/BaseButton.vue'
+import BackButton from '@/components/BackButton.vue'
 
 const router  = useRouter()
 const races   = ref([])
@@ -95,6 +96,9 @@ const colColor = (i) => headerHues[i % headerHues.length]
         </div>
       </article>
     </div>
+    <BackButton size="sm"  />
+
+
 
 
   </section>

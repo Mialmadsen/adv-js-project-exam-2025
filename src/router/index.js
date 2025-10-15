@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SeedView from '@/views/dev/SeedView.vue'
+
 import { installAuthGuards } from './guards/authGuard'
 
 // Lazy views
@@ -35,7 +35,7 @@ const routes = [
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
 
-  ...(import.meta.env.DEV ? [{ path: '/dev/seed', name: 'dev-seed', component: SeedView }] : []),
+
 ]
 
 // 1) create the router

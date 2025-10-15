@@ -38,7 +38,7 @@
            border border-text/10
            bg-transparent text-text placeholder:text-text/50
            focus:outline-none focus:ring-2 focus:ring-accent
-           disabled:opacity-60 disabled:pointer-events-none;
+           disabled:opacity-60 disabled:pointer-events-none text-sm md:text-base;
   }
 
   /* Optional helpers */
@@ -49,6 +49,7 @@
   /* If you sometimes place an icon/button inside the field */
   .ui-with-icon-left   { @apply pl-10; }
   .ui-with-action-right{ @apply pr-10; }
+
   .admin-card {
     @apply rounded-md bg-on-brand-text/50  p-5 backdrop-blur-[2px] border border-teal/40 shadow-xs;
   }

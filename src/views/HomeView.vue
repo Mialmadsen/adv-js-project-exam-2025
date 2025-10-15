@@ -24,7 +24,7 @@ onMounted(loadAll)
         v-for="r in races"
         :key="r.id"
         :title="r.title"
-        :length="(r.lengthKm ?? '') + (r.lengthKm ? ' km' : '')"
+        :length="r.lengthKm"
         :location="r.locationCity"
         :date="r.date"
         :image="r.heroImage || ''"
