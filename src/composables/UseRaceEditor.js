@@ -81,7 +81,7 @@ export function useRaceEditor(propsId) {
       const payload = { ...toPayload({ ...form, id }), updatedAt: serverTimestamp() }
 
       await setDoc(doc(collection(db, 'races'), id), payload, { merge: true })
-      router.push({ name: 'admin-races' })
+      return true
     } catch (e) {
       errorMsg.value = e?.message ?? String(e)
     } finally {

@@ -1,9 +1,10 @@
 <script setup>
-import { onMounted } from 'vue'
+import {ref, onMounted } from 'vue'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRaceEditor } from '@/composables/UseRaceEditor'
 import { useUnsaved } from '@/composables/useUnsaved'
 import BackButton from '@/components/BackButton.vue'
+import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
 
 const props = defineProps({ id: { type: String, default: null } })
 
@@ -16,7 +17,16 @@ const {
 } = useRaceEditor(props.id)
 
 // minimal unsaved tracking (after user finishes a field)
-const { markDirty, isDirty, anyDirty, blurOnEnter } = useUnsaved()
+const { markDirty, isDirty, anyDirty, blurOnEnter,resetAll } = useUnsaved()
+
+const showSaved = ref(false)
+
+async function saveAndAsk() {
+  const ok = await save()
+  if (ok) {
+     resetAll()
+    showSaved.value = true
+}}
 
 onMounted(load)
 </script>
@@ -38,7 +48,7 @@ onMounted(load)
 
         <div class="flex gap-3">
           <BaseButton variant="solid" size="sm" @click="cancel">Cancel</BaseButton>
-          <BaseButton :disabled="saving" variant="solid" size="sm" @click="save">
+          <BaseButton :disabled="saving" variant="solid" size="sm" @click="saveAndAsk">
             {{ saving ? 'Saving…' : 'Save' }}
           </BaseButton>
         </div>
@@ -347,7 +357,7 @@ onMounted(load)
 
         <div class="flex gap-3">
           <BaseButton variant="solid" size="sm" @click="cancel">Cancel</BaseButton>
-          <BaseButton :disabled="saving" variant="solid" size="sm" @click="save">
+          <BaseButton :disabled="saving" variant="solid" size="sm" @click="saveAndAsk">
             {{ saving ? 'Saving…' : 'Save' }}
           </BaseButton>
         </div>
@@ -356,5 +366,15 @@ onMounted(load)
 
 
     <p v-if="errorMsg" class="text-danger">{{ errorMsg }}</p>
+      <!-- success prompt -->
+    <SaveSuccessPrompt v-model:open="showSaved"
+      title="Saved"
+      message="Your changes have been successfully saved. Would you like to leave the page?"
+      confirm-label="Yes"
+      cancel-label="No"
+      :to="{ name: 'admin-races' }"
+    />
+
+
   </div>
 </template>
