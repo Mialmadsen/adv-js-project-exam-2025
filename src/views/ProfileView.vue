@@ -120,7 +120,7 @@ const defaultAvatar = '/default-avatar.png'
 const loading = ref(true)
 
 // --- List of countries for nationality select field ---
-const countries = ["Denmark","Sweden","Norway","Finland","Germany","France","UK","USA","Canada","Other"]
+const countries = ["Denmark","Sweden","Norway","Finland","Germany","France","UK","USA","Canada","Ukraine","Poland","Netherlands","Other"]
 
 // --- Editable fields configuration for profile form ---
 const editableFields = {
