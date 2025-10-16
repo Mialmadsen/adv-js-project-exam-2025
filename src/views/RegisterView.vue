@@ -52,7 +52,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '@/modules/useAuth'
-import { collection, getDocs, doc, addDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db } from '@/modules/firebase'
 import BaseButton from '@/components/BaseButton.vue'
 
@@ -135,10 +135,9 @@ async function submitRegistration() {
     // Save under user
     await addDoc(regRef, registrationData)
 
-    // Save in central participants collection
-    const participantsRef = collection(db, "participants")
-    await addDoc(participantsRef, {
-      userId: currentUser.value.uid,
+    // Save in central participants collection USING UID as document ID
+    const participantDocRef = doc(db, "participants", currentUser.value.uid)
+    await setDoc(participantDocRef, {
       email: currentUser.value.email,
       raceId: race.id,
       raceTitle: race.title,
@@ -146,7 +145,7 @@ async function submitRegistration() {
       extras: extras.value,
       total: totalPrice.value,
       createdAt: new Date()
-    })
+    }, { merge: true }) // merge=true for at undgå duplikater
 
     // Store in session for ThankYouView
     sessionStorage.setItem('registration', JSON.stringify(registrationData))
