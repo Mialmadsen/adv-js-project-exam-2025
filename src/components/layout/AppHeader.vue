@@ -111,13 +111,25 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
       <!-- menu -->
       <template #default="{ close }">
-        <RouterLink
-          to="/profile"
-          class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-          @click="close()"
-        >
-          <i class="fa-solid fa-passport"></i> Profile
-        </RouterLink>
+         <!-- If ADMIN: Dashboard -->
+  <RouterLink
+    v-if="isAdmin"
+    to="/admin"
+    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    @click="close()"
+  >
+    <i class="fa-solid fa-gauge-high"></i> Dashboard
+  </RouterLink>
+
+  <!-- If USER: Profile -->
+  <RouterLink
+    v-else
+    to="/profile"
+    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    @click="close()"
+  >
+    <i class="fa-solid fa-passport"></i> Profile
+  </RouterLink>
 
         <button
           class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
@@ -130,7 +142,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
   </template>
 
   <!-- checkout cart -->
-  <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text">
+  <RouterLink v-if="!isAdmin" to="/register/hard" aria-label="Register" class="hover:text-text">
     <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
   </RouterLink>
 </div>
@@ -200,7 +212,24 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
     <!-- Authed-only -->
     <li v-else>
-      <RouterLink to="/profile" class="py-1 hover:text-text" @click="menuOpen = false"><i class="fa-solid fa-passport"></i>My profile</RouterLink>
+      <RouterLink
+    v-if="isAdmin"
+    to="/admin"
+    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    @click="close()"
+  >
+    <i class="fa-solid fa-gauge-high"></i> Dashboard
+  </RouterLink>
+
+  <!-- If USER: Profile -->
+  <RouterLink
+    v-else
+    to="/profile"
+    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    @click="close()"
+  >
+    <i class="fa-solid fa-passport"></i> Profile
+  </RouterLink>
     </li>
     <li v-if="isAuthed">
       <button
@@ -211,7 +240,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
         Sign out
       </button>
     </li>
-    <li v-if="isAuthed">
+    <li v-if="isAuthed & !isAdmin">
        <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text"  @click="menuOpen = false">
     <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>Checkout
   </RouterLink>

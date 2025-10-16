@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SeedView from '@/views/dev/SeedView.vue'
+
 import { installAuthGuards } from './guards/authGuard'
 
 // Lazy views
@@ -11,8 +11,9 @@ const LoginView        = () => import('@/views/LoginView.vue')
 const SignupView       = () => import('@/views/RegisterView.vue') // reuse for now
 const ProfileView      = () => import('@/views/ProfileView.vue')
 const NotFoundView     = () => import('@/views/NotFoundView.vue')
-const ThankYouView = () => import('@/views/ThankYouView.vue')
-
+const AdminDashboard = () => import('@/views/admin/AdminDashboard.vue')
+const AdminRaces     = () => import('@/views/admin/AdminRaces.vue')
+const AdminRaceEditor  = () => import('@/views/admin/AdminRaceEditor.vue')
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -20,7 +21,7 @@ const routes = [
   { path: '/races/:id', name: 'race', component: RaceDetailView, props: true },
 
   { path: '/register/:raceId', name: 'register', component: RegisterView, props: true,
-    meta: { requiresAuth: true } },
+    meta: { requiresAuth: true, forbidAdmin: true} },
 
   { path: '/participants', name: 'participants', component: ParticipantsView },
 
@@ -28,12 +29,13 @@ const routes = [
   { path: '/auth/signup', name: 'signup', component: SignupView, meta: { guestOnly: true } },
 
   { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
-
-  { path: '/thankyou', name: 'thankyou', component: ThankYouView },
+  { path: '/admin', name: 'admin',   component: AdminDashboard,  meta: { requiresAuth: true, requiresAdmin: true } },
+  { path: '/admin/races', name: 'admin-races',   component: AdminRaces,   meta: { requiresAuth: true, requiresAdmin: true } },
+   { path: '/admin/races/:id',    name: 'admin-race-edit',  component: AdminRaceEditor, props: true, meta: { requiresAuth: true, requiresAdmin: true } },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
 
-  ...(import.meta.env.DEV ? [{ path: '/dev/seed', name: 'dev-seed', component: SeedView }] : []),
+
 ]
 
 // 1) create the router

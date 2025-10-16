@@ -32,7 +32,7 @@ const props = defineProps({
 
         <div class="mt-6 flex flex-wrap items-center gap-3">
           <RouterLink :to="{ name: 'register', params: { raceId: race.id } }">
-            <BaseButton variant="solid" size="md">Register</BaseButton>
+            <BaseButton variant="solid" size="lg">Register</BaseButton>
           </RouterLink>
           <span class="font-body text-text/60">
             {{ race.locationCity }} • {{ race.date }} • {{ race.startTime }}
@@ -116,6 +116,24 @@ const props = defineProps({
         </p>
       </div>
     </section>
+    <section class="grid gap-6 lg:grid-cols-2">
+       <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
+        <h3 class="font-title text-xl text-accent mb-3">Registration Fee</h3>
+        <p class="font-title text-brand text-4xl">DKK {{ race.price }}</p>
+
+      </div>
+     <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
+      <h3 class="font-title text-xl text-accent mb-3">Fee covers:</h3>
+       <ul class="list-disc pl-5 space-y-1 font-body text-text">
+          <li v-for="(item, i) in race.perks" :key="'r'+i">{{ item }}</li>
+        </ul>
+        <p v-if="race.participantsNote" class="mt-3 text-sm text-text/70">
+          {{ race.participantsNote }}
+        </p>
+     </div>
+
+
+    </section>
 
     <!-- Map (optional) -->
     <section v-if="race.mapImage" class="rounded-md overflow-hidden  ring-1 ring-teal">
@@ -124,12 +142,12 @@ const props = defineProps({
   </article>
   <div class="mt-6 flex flex-wrap items-center justify-between ">
   <RouterLink :to="{ name: 'register', params: { raceId: race.id } }">
-    <BaseButton variant="solid" size="md">Register</BaseButton>
+    <BaseButton variant="solid" size="lg">Register</BaseButton>
   </RouterLink>
 
   <!-- NEW: go to Participants  -->
   <RouterLink :to="{ name: 'participants', query: { race: race.id } }" aria-label="View participants">
-    <BaseButton variant="outline" size="md">Participants</BaseButton>
+    <BaseButton variant="outline" size="lg">Participants</BaseButton>
   </RouterLink>
 
 
