@@ -94,45 +94,30 @@
         </div>
       </div>
 
-      <!-- Danger zone: Delete account section -->
-      <div class="border-t border-text/20 pt-6">
-        <h3 class="text-xl font-title mb-4 text-danger">Danger zone</h3>
-        <p class="text-text/50 text-sm mb-3">This will permanently delete your profile and race data.</p>
-        <BaseButton class="w-full bg-danger text-on-brand-text hover:opacity-90" @click="deleteProfile">
-          Delete profile
-        </BaseButton>
-      </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
-// --- Imports: Vue, Firebase, Auth, Router, and UI components ---
 import { ref, reactive, onMounted, watch } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'firebase/firestore'
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
-import { deleteUser } from 'firebase/auth'
 import { db } from '@/modules/firebase'
 import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRouter } from 'vue-router'
 
-// --- Get current user and router instance ---
 const { currentUser } = useAuth()
 const router = useRouter()
 
-// --- Reactive state for user data, race data, edit mode, and loading ---
 const userData = reactive({})
 const raceData = ref(null)
 const editMode = reactive({})
 const defaultAvatar = '/default-avatar.png'
 const loading = ref(true)
 
-// --- List of countries for nationality select field ---
 const countries = ["Denmark","Sweden","Norway","Finland","Germany","France","UK","USA","Canada","Other"]
 
-// --- Editable fields configuration for profile form ---
 const editableFields = {
   fullName: { label: 'Full name', placeholder: 'Your name...' },
   email: { label: 'Email', placeholder: 'Your email...' },
@@ -144,41 +129,34 @@ const editableFields = {
   mealChoice: { label: 'Choice of meal', options: ['Regular','Vegetarian','Gluten free'] }
 }
 
-// --- Load user data and race registration from Firestore ---
 async function loadUserData() {
   if (!currentUser.value) return
   loading.value = true
   try {
-    // Load user profile from 'users' collection
     const userRef = doc(db, 'users', currentUser.value.uid)
     const userSnap = await getDoc(userRef)
     if (userSnap.exists()) Object.assign(userData, userSnap.data())
     else userData.email = currentUser.value.email
 
-    // Load race registration from 'registrations' subcollection
     const regRef = collection(userRef,'registrations')
     const regSnap = await getDocs(regRef)
     if (!regSnap.empty) {
       const reg = regSnap.docs[0]
       raceData.value = { id: reg.id, ...reg.data() }
-      // Merge race info into userData for participants
       Object.assign(userData, raceData.value)
     }
   } catch(err){ console.error(err) }
   finally { loading.value = false }
 }
 
-// --- Load user data on mount and when currentUser changes ---
 onMounted(() => { if (currentUser.value) loadUserData() })
 watch(currentUser, (user) => { if (user) loadUserData() })
 
-// --- Toggle edit mode for a field, and save if toggling off ---
 function toggleEdit(key) {
   if (editMode[key]) saveUserInfo()
   editMode[key] = !editMode[key]
 }
 
-// --- Save user info to Firestore (users and participants collections) ---
 async function saveUserInfo() {
   if (!currentUser.value) return
   try {
@@ -187,14 +165,12 @@ async function saveUserInfo() {
   } catch(err){ console.error(err); alert('Error saving user info.') }
 }
 
-// --- Save all edits and exit edit mode for all fields ---
 async function saveAllEdits() {
   await saveUserInfo()
   Object.keys(editMode).forEach(k=>editMode[k]=false)
   alert('All information updated!')
 }
 
-// --- Upload and update profile picture in Firebase Storage ---
 async function uploadProfilePic(e) {
   const file = e.target.files[0]
   if (!file || !currentUser.value) return
@@ -209,34 +185,28 @@ async function uploadProfilePic(e) {
   } catch(err){ console.error(err); alert('Failed to upload profile picture.') }
 }
 
-// --- Delete race registration from Firestore and update participants ---
 async function deleteRegistration() {
-  if (!raceData.value){ alert('No registration to delete.'); return }
-  if (!confirm('Are you sure you want to delete your race registration?')) return
+  if (!raceData.value) { 
+    alert('No registration to delete.'); 
+    return;
+  }
+  if (!confirm('Are you sure you want to delete your race registration?')) return;
+
   try {
     const userRef = doc(db,'users',currentUser.value.uid)
     const regRef = doc(collection(userRef,'registrations'), raceData.value.id)
     await deleteDoc(regRef)
-    raceData.value = null
-    // Remove race info from participants
-    await setDoc(doc(db,'participants',currentUser.value.uid), { raceTitle:null, bib:null }, { merge:true })
-    alert('Your race registration was deleted.')
-  } catch(err){ console.error(err); alert('Error deleting registration.') }
-}
 
-// --- Delete entire user profile, race data, and account from Firebase ---
-async function deleteProfile() {
-  if (!confirm('⚠️ This will permanently delete your account. Continue?')) return
-  try {
-    await deleteRegistration()
-    const storage = getStorage()
-    const picRef = sRef(storage, `profilePics/${currentUser.value.uid}`)
-    try{ await deleteObject(picRef) } catch(e){}
-    await deleteDoc(doc(db,'users',currentUser.value.uid))
-    await deleteDoc(doc(db,'participants',currentUser.value.uid))
-    await deleteUser(currentUser.value)
-    alert('Your profile and account have been deleted.')
-    router.push('/')
-  } catch(err){ console.error(err); alert('Error deleting profile. Try logging in again before deleting.') }
+    // Slet deltagelse i participants collection
+    const participantRef = doc(db,'participants',currentUser.value.uid)
+    await deleteDoc(participantRef)
+
+    raceData.value = null
+
+    alert('Your race registration has been deleted.')
+  } catch(err){
+    console.error(err)
+    alert('Error deleting registration.')
+  }
 }
 </script>
