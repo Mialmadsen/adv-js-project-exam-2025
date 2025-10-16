@@ -14,6 +14,7 @@ const NotFoundView     = () => import('@/views/NotFoundView.vue')
 const AdminDashboard = () => import('@/views/admin/AdminDashboard.vue')
 const AdminRaces     = () => import('@/views/admin/AdminRaces.vue')
 const AdminRaceEditor  = () => import('@/views/admin/AdminRaceEditor.vue')
+const ThankYouView = () => import('@/views/ThankYouView.vue')
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -34,6 +35,8 @@ const routes = [
    { path: '/admin/races/:id',    name: 'admin-race-edit',  component: AdminRaceEditor, props: true, meta: { requiresAuth: true, requiresAdmin: true } },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
+
+  { path: '/thankyou', name: 'thankyou', component: ThankYouView },
 
 
 ]
