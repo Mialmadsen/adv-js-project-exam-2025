@@ -1,23 +1,24 @@
 <template>
-  <!-- Loading -->
+  <!-- Loading state while profile data is fetched -->
   <div v-if="loading" class="flex justify-center items-center min-h-screen font-body">
     <p class="text-text/60 text-lg">Loading profile…</p>
   </div>
 
-  <!-- Not logged in -->
+  <!-- If not logged in, prompt user to log in -->
   <div v-else-if="!currentUser" class="flex justify-center items-center min-h-screen font-body">
     <p class="text-text/60 text-lg">You must be logged in to view this page.</p>
   </div>
 
-  <!-- Profile -->
+  <!-- Profile view for logged-in users -->
   <div v-else class="min-h-screen flex flex-col items-center p-8 font-body">
     <div class="admin-card w-full max-w-3xl space-y-10">
 
-      <!-- Header -->
+      <!-- Profile header with avatar and name -->
       <div class="flex flex-col items-center space-y-4">
         <div class="relative">
           <img :src="userData.photoURL || defaultAvatar"
                class="w-32 h-32 rounded-full object-cover border-4 border-accent" />
+          <!-- Upload profile picture button -->
           <label class="absolute bottom-0 right-0 bg-accent text-on-brand-text rounded-full p-2 cursor-pointer">
             <i class="fa fa-camera"></i>
             <input type="file" accept="image/*" class="hidden" @change="uploadProfilePic" />
@@ -26,21 +27,21 @@
         <h2 class="text-2xl font-title font-bold">Hello {{ userData.fullName || currentUser.email }}!</h2>
       </div>
 
-      <!-- Personal Info -->
+      <!-- Editable personal information section -->
       <div>
         <h3 class="text-xl font-title mb-4">Personal information <span class="text-text/50 text-sm">(from user)</span></h3>
         <div class="space-y-3">
           <div v-for="(field, key) in editableFields" :key="key" class="flex items-center gap-2">
             <label class="w-40 font-medium text-text/80">{{ field.label }}</label>
 
-            <!-- Input fields -->
+            <!-- Editable input fields for text, email, phone -->
             <input v-if="editMode[key] && (key==='fullName'||key==='email'||key==='phone')"
                    v-model="userData[key]"
                    class="ui-input flex-1"
                    :placeholder="field.placeholder"
                    :type="key==='email'?'email':key==='phone'?'tel':'text'" />
 
-            <!-- Select fields -->
+            <!-- Editable select fields for options -->
             <select v-else-if="editMode[key] && field.options"
                     v-model="userData[key]"
                     class="ui-input flex-1">
@@ -48,7 +49,7 @@
               <option v-for="opt in field.options" :key="opt" :value="opt">{{ opt }}</option>
             </select>
 
-            <!-- Age -->
+            <!-- Editable age field -->
             <input v-else-if="editMode[key] && key==='age'"
                    v-model.number="userData[key]"
                    type="number"
@@ -60,19 +61,20 @@
             <!-- Static text if not editing -->
             <span v-else class="flex-1 border-b border-text/20 py-1">{{ userData[key] || '—' }}</span>
 
-            <!-- Toggle button -->
+            <!-- Toggle edit/save button -->
             <button @click="toggleEdit(key)" class="text-accent text-sm font-medium">
               {{ editMode[key] ? 'Save' : 'Edit' }}
             </button>
           </div>
         </div>
 
+        <!-- Save all edits button -->
         <BaseButton class="mt-6 bg-accent text-on-brand-text hover:opacity-90" @click="saveAllEdits">
           Update info
         </BaseButton>
       </div>
 
-      <!-- Race Info -->
+      <!-- Race registration info section -->
       <div>
         <h3 class="text-xl font-title mb-4">Race information <span class="text-text/50 text-sm">(from database)</span></h3>
         <div v-if="raceData" class="space-y-2">
@@ -84,6 +86,7 @@
             <label class="w-40 font-medium text-text/80">Bib number</label>
             <span class="flex-1 border-b border-text/20 py-1">{{ raceData.bib }}</span>
           </div>
+          <!-- Delete race registration button -->
           <BaseButton class="mt-4 bg-danger text-on-brand-text hover:opacity-90" @click="deleteRegistration">Delete race</BaseButton>
         </div>
         <div v-else>
@@ -91,7 +94,7 @@
         </div>
       </div>
 
-      <!-- Delete Account -->
+      <!-- Danger zone: Delete account section -->
       <div class="border-t border-text/20 pt-6">
         <h3 class="text-xl font-title mb-4 text-danger">Danger zone</h3>
         <p class="text-text/50 text-sm mb-3">This will permanently delete your profile and race data.</p>
@@ -105,6 +108,7 @@
 </template>
 
 <script setup>
+// --- Imports: Vue, Firebase, Auth, Router, and UI components ---
 import { ref, reactive, onMounted, watch } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'firebase/firestore'
 import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
@@ -114,18 +118,21 @@ import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRouter } from 'vue-router'
 
+// --- Get current user and router instance ---
 const { currentUser } = useAuth()
 const router = useRouter()
 
+// --- Reactive state for user data, race data, edit mode, and loading ---
 const userData = reactive({})
 const raceData = ref(null)
 const editMode = reactive({})
 const defaultAvatar = '/default-avatar.png'
 const loading = ref(true)
 
-// Countries for nationality select
+// --- List of countries for nationality select field ---
 const countries = ["Denmark","Sweden","Norway","Finland","Germany","France","UK","USA","Canada","Other"]
 
+// --- Editable fields configuration for profile form ---
 const editableFields = {
   fullName: { label: 'Full name', placeholder: 'Your name...' },
   email: { label: 'Email', placeholder: 'Your email...' },
@@ -137,39 +144,41 @@ const editableFields = {
   mealChoice: { label: 'Choice of meal', options: ['Regular','Vegetarian','Gluten free'] }
 }
 
-// Load user data
+// --- Load user data and race registration from Firestore ---
 async function loadUserData() {
   if (!currentUser.value) return
   loading.value = true
   try {
-    // Load from users
+    // Load user profile from 'users' collection
     const userRef = doc(db, 'users', currentUser.value.uid)
     const userSnap = await getDoc(userRef)
     if (userSnap.exists()) Object.assign(userData, userSnap.data())
     else userData.email = currentUser.value.email
 
-    // Load race registration if exists
+    // Load race registration from 'registrations' subcollection
     const regRef = collection(userRef,'registrations')
     const regSnap = await getDocs(regRef)
     if (!regSnap.empty) {
       const reg = regSnap.docs[0]
       raceData.value = { id: reg.id, ...reg.data() }
-      // merge race info into userData for participants
+      // Merge race info into userData for participants
       Object.assign(userData, raceData.value)
     }
   } catch(err){ console.error(err) }
   finally { loading.value = false }
 }
 
+// --- Load user data on mount and when currentUser changes ---
 onMounted(() => { if (currentUser.value) loadUserData() })
 watch(currentUser, (user) => { if (user) loadUserData() })
 
+// --- Toggle edit mode for a field, and save if toggling off ---
 function toggleEdit(key) {
   if (editMode[key]) saveUserInfo()
   editMode[key] = !editMode[key]
 }
 
-// Save profile data in users + participants (merge to avoid duplicates)
+// --- Save user info to Firestore (users and participants collections) ---
 async function saveUserInfo() {
   if (!currentUser.value) return
   try {
@@ -178,13 +187,14 @@ async function saveUserInfo() {
   } catch(err){ console.error(err); alert('Error saving user info.') }
 }
 
+// --- Save all edits and exit edit mode for all fields ---
 async function saveAllEdits() {
   await saveUserInfo()
   Object.keys(editMode).forEach(k=>editMode[k]=false)
   alert('All information updated!')
 }
 
-// Upload profile picture
+// --- Upload and update profile picture in Firebase Storage ---
 async function uploadProfilePic(e) {
   const file = e.target.files[0]
   if (!file || !currentUser.value) return
@@ -199,7 +209,7 @@ async function uploadProfilePic(e) {
   } catch(err){ console.error(err); alert('Failed to upload profile picture.') }
 }
 
-// Delete race registration
+// --- Delete race registration from Firestore and update participants ---
 async function deleteRegistration() {
   if (!raceData.value){ alert('No registration to delete.'); return }
   if (!confirm('Are you sure you want to delete your race registration?')) return
@@ -208,13 +218,13 @@ async function deleteRegistration() {
     const regRef = doc(collection(userRef,'registrations'), raceData.value.id)
     await deleteDoc(regRef)
     raceData.value = null
-    // Fjern race info fra participants
+    // Remove race info from participants
     await setDoc(doc(db,'participants',currentUser.value.uid), { raceTitle:null, bib:null }, { merge:true })
     alert('Your race registration was deleted.')
   } catch(err){ console.error(err); alert('Error deleting registration.') }
 }
 
-// Delete entire profile
+// --- Delete entire user profile, race data, and account from Firebase ---
 async function deleteProfile() {
   if (!confirm('⚠️ This will permanently delete your account. Continue?')) return
   try {
