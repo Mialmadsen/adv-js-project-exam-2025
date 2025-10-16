@@ -11,6 +11,8 @@ const LoginView        = () => import('@/views/LoginView.vue')
 const SignupView       = () => import('@/views/RegisterView.vue') // reuse for now
 const ProfileView      = () => import('@/views/ProfileView.vue')
 const NotFoundView     = () => import('@/views/NotFoundView.vue')
+const ThankYouView = () => import('@/views/ThankYouView.vue')
+
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -26,6 +28,8 @@ const routes = [
   { path: '/auth/signup', name: 'signup', component: SignupView, meta: { guestOnly: true } },
 
   { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
+
+  { path: '/thankyou', name: 'thankyou', component: ThankYouView },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
 
