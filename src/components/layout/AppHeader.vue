@@ -4,6 +4,7 @@ import logoUrl from '@/assets/Logo.svg'
 import MenuDropdown from '@/components/MenuDropdown.vue'
 import { useRole } from '@/composables/useRole'
 import { useAuth } from '@/modules/useAuth'
+import { useUserProfile } from '@/composables/useUserProfile'
 
 /* mobile nav toggle */
 const menuOpen = ref(false)
@@ -11,11 +12,20 @@ const menuOpen = ref(false)
 /* role-based header bits */
 const { isUser, isAdmin } = useRole()
 const { currentUser, logout } = useAuth()
+const { profile } = useUserProfile()
 const isAuthed = computed(() => isUser.value || isAdmin.value)
-const displayName = computed(() =>isAdmin.value
-  ? 'Admin'
- : (currentUser.value?.email?.split('@')[0] ?? 'Athlete')
-)
+
+// Prefer Admin label → Firestore fullName → Firebase displayName → email name → fallback
+const displayName = computed(() => {
+  if (isAdmin.value) return 'Admin'
+  return (
+    profile.value?.fullName ??
+    currentUser.value?.displayName ??
+    currentUser.value?.email?.split('@')[0] ??
+    'Athlete'
+  )
+})
+
 const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
 </script>
@@ -216,7 +226,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
     v-if="isAdmin"
     to="/admin"
     class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-    @click="close()"
+    @click="menuOpen = false"
   >
     <i class="fa-solid fa-gauge-high"></i> Dashboard
   </RouterLink>
@@ -226,7 +236,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
     v-else
     to="/profile"
     class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-    @click="close()"
+    @click="menuOpen = false"
   >
     <i class="fa-solid fa-passport"></i> Profile
   </RouterLink>
@@ -240,7 +250,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
         Sign out
       </button>
     </li>
-    <li v-if="isAuthed & !isAdmin">
+    <li v-if="isAuthed && !isAdmin">
        <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text"  @click="menuOpen = false">
     <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>Checkout
   </RouterLink>

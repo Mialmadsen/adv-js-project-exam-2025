@@ -16,6 +16,7 @@ const AdminRaces     = () => import('@/views/admin/AdminRaces.vue')
 const AdminRaceEditor  = () => import('@/views/admin/AdminRaceEditor.vue')
 const ThankYouView = () => import('@/views/ThankYouView.vue')
 
+
 const routes = [
   { path: '/', name: 'home', component: HomeView },
 
@@ -33,6 +34,12 @@ const routes = [
   { path: '/admin', name: 'admin',   component: AdminDashboard,  meta: { requiresAuth: true, requiresAdmin: true } },
   { path: '/admin/races', name: 'admin-races',   component: AdminRaces,   meta: { requiresAuth: true, requiresAdmin: true } },
    { path: '/admin/races/:id',    name: 'admin-race-edit',  component: AdminRaceEditor, props: true, meta: { requiresAuth: true, requiresAdmin: true } },
+   {
+  path: '/admin/users',
+  name: 'admin-users',
+  component: () => import('@/views/admin/AdminUsers.vue'),
+  meta: { requiresAdmin: true } // uses your existing admin guard
+},
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },
 

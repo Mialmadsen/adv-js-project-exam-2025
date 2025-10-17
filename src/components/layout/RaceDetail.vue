@@ -2,7 +2,7 @@
 import BaseButton from '@/components/BaseButton.vue'
 import FactCard from '@/components/layout/FactCard.vue'
 
-const props = defineProps({
+const { race } = defineProps({
   race: { type: Object, required: true },
 })
 </script>
@@ -101,13 +101,13 @@ const props = defineProps({
     <!-- Equipment -->
     <section class="grid gap-6 lg:grid-cols-2">
       <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
-        <h3 class="font-title text-xl text-accent mb-3">Mandatory equipment</h3>
+        <h3 class="font-title text-2xl text-accent mb-3">Mandatory equipment</h3>
         <ul class="list-disc pl-5 space-y-1 font-body text-text">
           <li v-for="(item, i) in race.equipmentMandatory" :key="'m'+i">{{ item }}</li>
         </ul>
       </div>
       <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
-        <h3 class="font-title text-xl text-accent mb-3">Recommended</h3>
+        <h3 class="font-title text-2xl text-accent mb-3">Recommended</h3>
         <ul class="list-disc pl-5 space-y-1 font-body text-text">
           <li v-for="(item, i) in race.equipmentRecommended" :key="'r'+i">{{ item }}</li>
         </ul>
@@ -118,12 +118,12 @@ const props = defineProps({
     </section>
     <section class="grid gap-6 lg:grid-cols-2">
        <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
-        <h3 class="font-title text-xl text-accent mb-3">Registration Fee</h3>
+        <h3 class="font-title text-2xl text-accent mb-3">Registration Fee</h3>
         <p class="font-title text-brand text-4xl">DKK {{ race.price }}</p>
 
       </div>
      <div class="rounded-md bg-bg p-6  ring-1 ring-teal">
-      <h3 class="font-title text-xl text-accent mb-3">Fee covers:</h3>
+      <h3 class="font-title text-2xl text-accent mb-3">Fee covers:</h3>
        <ul class="list-disc pl-5 space-y-1 font-body text-text">
           <li v-for="(item, i) in race.perks" :key="'r'+i">{{ item }}</li>
         </ul>

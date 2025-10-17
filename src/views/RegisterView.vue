@@ -13,7 +13,7 @@
         <div>
           <label class="ui-label">Select Race</label>
           <select v-model="selectedRaceId" class="ui-input" required>
-            <option value="" disabled>Select a race</option>
+            <option value="" disabled >Select a race</option>
             <option v-for="r in races" :key="r.id" :value="r.id">{{ r.title }}</option>
           </select>
         </div>
@@ -59,6 +59,7 @@ import { useAuth } from '@/modules/useAuth'
 import { collection, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db } from '@/modules/firebase'
 import BaseButton from '@/components/BaseButton.vue'
+
 
 // --- Get current user and login state from auth composable ---
 const { currentUser, isLoggedIn } = useAuth()
