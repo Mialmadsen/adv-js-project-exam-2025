@@ -4,7 +4,9 @@ import { useUsersList } from '@/composables/useUsersList'
 import { useUserRegistrations } from '@/composables/useUserRegistrations'
 import UsersTable from '@/components/admin/UsersTable.vue'
 import UserDetailsModal from '@/components/admin/UserDetailsModal.vue'
-import { useCsvExport } from '@/utils/useCsvExport'
+import {
+   downloadUsersCsv, downloadUsersJson
+} from "@/utils/exporters";
 
 import { useContact } from '@/composables/useContact'
 import BaseButton from '@/components/BaseButton.vue'
@@ -12,7 +14,7 @@ import { useUserStats } from '@/composables/useUserStats'
 import UserStatsModal from '@/components/admin/UserStatsModal.vue'
 
 
-const { downloadUsersCsv, downloadUsersJson } = useCsvExport()
+
  const statsOpen = ref(false)
 const statsData = ref(null)
 const { buildStats } = useUserStats()

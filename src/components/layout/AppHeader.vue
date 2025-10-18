@@ -5,6 +5,9 @@ import MenuDropdown from '@/components/MenuDropdown.vue'
 import { useRole } from '@/composables/useRole'
 import { useAuth } from '@/modules/useAuth'
 import { useUserProfile } from '@/composables/useUserProfile'
+import { useRouter } from "vue-router";
+const router = useRouter();
+
 
 /* mobile nav toggle */
 const menuOpen = ref(false)
@@ -28,6 +31,19 @@ const displayName = computed(() => {
 
 const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
+function firstName(name) {
+  return (name || '').trim().split(' ')[0] || '';
+}
+
+async function handleSignOut() {
+  try {
+    await logout();
+  } finally {
+    // close menus etc. here if needed
+    router.replace({ path: "/" }); // or { name: "home" }
+  }
+}
+
 </script>
 
 <template>
@@ -43,7 +59,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
         </RouterLink>
 
         <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-8 font-body font-semibold text-lg text-text">
+        <nav class="hidden md:flex items-center gap-8 font-body font-medium text-lg text-text">
 
                             <!-- Races: word scrolls menu -->
             <MenuDropdown>
@@ -87,13 +103,50 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
 
 
-          <RouterLink to="/participants" class="hover:text-text">Runners</RouterLink>
+          <!-- Runners dropdown -->
+<MenuDropdown>
+  <!-- trigger -->
+  <template #trigger="{ toggle }">
+    <div class="flex items-center gap-2">
+      <RouterLink :to="{ name: 'participants' }" class="hover:text-teal">
+        Participants
+      </RouterLink>
+      <button
+        class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
+        @click="toggle"
+        aria-label="Open runners menu"
+        aria-haspopup="menu"
+      >
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+    </div>
+  </template>
+
+  <!-- panel items -->
+  <template #default="{ close }">
+    <RouterLink
+      :to="{ name: 'participants', query: { race: 'hard' } }"
+      class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+      @click="close()"
+    >
+      <i class="fa-solid fa-users"></i> HARD — Start list
+    </RouterLink>
+
+    <RouterLink
+      :to="{ name: 'participants', query: { race: 'light' } }"
+      class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+      @click="close()"
+    >
+      <i class="fa-solid fa-users"></i> LIGHT — Start list
+    </RouterLink>
+  </template>
+</MenuDropdown>
 
 
         </nav>
 
       <!-- Right side -->
-<div class="hidden md:flex items-center gap-5 text-text/80">
+<div class="hidden md:flex items-center gap-5 text-lg  text-text/80">
   <!-- GUEST: show login icon -->
   <template v-if="!isAuthed">
     <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
@@ -114,13 +167,13 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
           <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 hover:bg-teal ring-teal flex items-center justify-center text-text font-title">
             {{ initial }}
           </div>
-          <span class="font-body font-semibold">Hi, {{ displayName }}</span>
+          <span class="font-body font-semibold">Hi, {{firstName(displayName) }}</span>
           <i class="fa-solid fa-chevron-down"></i>
         </button>
       </template>
 
       <!-- menu -->
-      <template #default="{ close }">
+      <template #default="{ close } ">
          <!-- If ADMIN: Dashboard -->
   <RouterLink
     v-if="isAdmin"
@@ -128,7 +181,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
     class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
     @click="close()"
   >
-    <i class="fa-solid fa-gauge-high"></i> Dashboard
+    <i class="fa-solid fa-gauge-high font-medium text-lg text-text"></i> Dashboard
   </RouterLink>
 
   <!-- If USER: Profile -->
@@ -138,12 +191,12 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
     class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
     @click="close()"
   >
-    <i class="fa-solid fa-passport"></i> Profile
+    <i class="fa-solid fa-passport font-medium text-lg text-text" ></i> Profile
   </RouterLink>
 
         <button
           class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-          @click="logout(); close()"
+          @click="handleSignOut(); close()"
         >
           <i class="fa-solid fa-right-from-bracket"></i> Sign out
         </button>
@@ -163,7 +216,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
   <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 ring-teal grid place-items-center font-title">
     {{ initial }}
   </div>
-  <span class="text-lg font-semibold">Hi, {{ displayName }}</span>
+  <span class="text-lg font-semibold">Hi, {{firstName(displayName) }}</span>
 </div>
 
           <button
@@ -187,7 +240,7 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
   <ul class="flex flex-col gap-3">
 
        <!-- Races group -->
-    <li>
+    <li class="border-t-1 border-teal">
       <RouterLink to="/" class="py-1 hover:text-text" @click="menuOpen = false">Races</RouterLink>
       <ul class="mt-1">
         <li>
@@ -211,21 +264,39 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
       </ul>
     </li>
 
-    <li>
-      <RouterLink to="/participants" class="py-1 hover:text-text" @click="menuOpen = false">Runners</RouterLink>
+    <li class="border-t-1 border-teal">
+      <RouterLink to="/participants" class="py-1 hover:text-text" @click="menuOpen = false">Participants</RouterLink>
+       <ul class="mt-1">
+        <li>
+          <RouterLink
+           :to="{ name: 'participants', query: { race: 'hard' } }"
+            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+            @click="menuOpen = false"
+          >
+            <i class="fa-solid fa-users"></i> HARD — Start list
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink
+            :to="{ name: 'participants', query: { race: 'light' } }"
+            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+            @click="menuOpen = false"
+          >
+            <i class="fa-solid fa-users"></i> LIGHT — Start list
+          </RouterLink>
+        </li>
+      </ul>
     </li>
 
-    <!-- Guest-only -->
-    <li v-if="!isAuthed">
+    <li v-if="!isAuthed" class="border-t-1 border-teal">
       <RouterLink to="/auth/login" class="py-1 hover:text-text" @click="menuOpen = false">Sign in</RouterLink>
     </li>
 
-    <!-- Authed-only -->
-    <li v-else>
+    <li v-else class="border-t-1 border-teal">
       <RouterLink
     v-if="isAdmin"
     to="/admin"
-    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    class="block py-2.5 font-body hover:bg-bg hover:rounded-md "
     @click="menuOpen = false"
   >
     <i class="fa-solid fa-gauge-high"></i> Dashboard
@@ -235,23 +306,24 @@ const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
   <RouterLink
     v-else
     to="/profile"
-    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
+    class="block font-body hover:bg-bg hover:rounded-md"
     @click="menuOpen = false"
   >
     <i class="fa-solid fa-passport"></i> Profile
   </RouterLink>
     </li>
+
     <li v-if="isAuthed">
       <button
-        class="py-1 hover:text-text text-left"
-        @click="logout(); menuOpen = false"
+        class="py-2.5 hover:text-text text-left"
+        @click="handleSignOut(); menuOpen = false"
       ><i class="fa-solid fa-right-from-bracket"></i>
 
         Sign out
       </button>
     </li>
     <li v-if="isAuthed && !isAdmin">
-       <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text"  @click="menuOpen = false">
+       <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text py-2.5"  @click="menuOpen = false">
     <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>Checkout
   </RouterLink>
     </li>

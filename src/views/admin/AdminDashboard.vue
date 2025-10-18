@@ -12,7 +12,7 @@
         <p class="font-body text-text/70 text-sm">Create, edit, delete races.</p>
       </RouterLink>
 
-      <RouterLink to="/admin/home"
+      <RouterLink to="/"
         class="admin-card  hover:bg-teal/50">
         <h2 class="font-title text-xl text-text mb-2">Front page</h2>
         <p class="font-body text-text/70 text-sm">Hero image, welcome text, leaders, sponsors.</p>
@@ -24,7 +24,7 @@
         <p class="font-body text-text/70 text-sm">Manage user accounts.</p>
       </RouterLink>
 
-      <RouterLink to="/admin/participants"
+      <RouterLink to="participants"
         class="admin-card  hover:bg-teal/50">
         <h2 class="font-title text-xl text-text mb-2">Participants</h2>
         <p class="font-body text-text/70 text-sm">Registrations & bibs.</p>

@@ -22,7 +22,7 @@ function iconFor(key) {
   <section class="admin-card">
     <!-- Header (desktop/tablet) -->
     <div
-      class="hidden md:grid grid-cols-12 gap-3 py-2 border-b border-text/10 text-sm font-title"
+      class="hidden md:grid grid-cols-12 gap-3 pl-1 py-2 border-b bg-accent/20 border-text/10 text-sm font-title"
     >
 
       <button class="col-span-4 flex items-center gap-1 text-left" @click="askSort('fullName')">
@@ -50,7 +50,7 @@ function iconFor(key) {
       v-else
       v-for="u in users"
       :key="u.id"
-      class="grid grid-cols-2 md:grid-cols-12 gap-2 md:gap-3 py-2 border-b border-text/10 text-sm items-center cursor-pointer hover:bg-teal/50"
+      class="grid grid-cols-2 md:grid-cols-12 gap-2 md:gap-3 pl-1 py-2 border-b border-text/10 text-sm items-center cursor-pointer hover:bg-teal/50"
       @click="emit('select', u)"
     >
       <!-- Name -->
