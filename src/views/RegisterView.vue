@@ -24,11 +24,11 @@
           <div class="space-y-2">
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.tshirt" />
-              T-shirt (+100 DKK)
+              T-shirt (+{{effectiveTshirtPrice||0 }} DKK)
             </label>
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.medal" />
-              Medal (+50 DKK)
+              Medal (+{{effectiveMedalPrice||0 }} DKK)
             </label>
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.meal" />
@@ -71,8 +71,8 @@ const selectedRaceId = ref('')
 const extras = ref({ tshirt: false, medal: false, meal: false })
 
 // --- Prices for extras ---
-const tshirtPrice = 100
-const medalPrice = 50
+// const tshirtPrice = 100
+// const medalPrice = 50
 
 // --- Load all races from Firestore when component mounts ---
 async function loadRaces() {
@@ -85,15 +85,23 @@ async function loadRaces() {
   }
 }
 onMounted(() => loadRaces())
+const selectedRace = computed(() => races.value.find(r => r.id === selectedRaceId.value) || null)
+
+const toNumber = (v, fallback) => {
+  const n = typeof v === 'number' ? v : (v == null ? NaN : Number(v))
+  return Number.isFinite(n) ? n : fallback
+}
+
+const effectiveTshirtPrice = computed(() => toNumber(selectedRace.value?.tshirtPrice, 100))
+const effectiveMedalPrice  = computed(() => toNumber(selectedRace.value?.medalPrice,  50 ))
+
 
 // --- Compute total price based on selected race and extras ---
 const totalPrice = computed(() => {
-  if (!selectedRaceId.value) return 0
-  const race = races.value.find(r => r.id === selectedRaceId.value)
-  if (!race) return 0
-  let total = race.price || 0
-  if (extras.value.tshirt) total += tshirtPrice
-  if (extras.value.medal) total += medalPrice
+  if (!selectedRace.value) return 0
+  let total = toNumber(selectedRace.value.price, 0)
+  if (extras.value.tshirt) total += effectiveTshirtPrice.value
+  if (extras.value.medal)  total += effectiveMedalPrice.value
   return total
 })
 
