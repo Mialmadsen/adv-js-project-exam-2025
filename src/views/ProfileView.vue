@@ -96,6 +96,13 @@
 
     </div>
   </div>
+  <SaveSuccessPrompt v-model:open="showSavedPrompt"
+      title="Saved"
+      message="Your changes have been successfully saved. Would you like to leave the page?"
+      confirm-label="Yes"
+      cancel-label="No"
+      :to="{ name: '/' }"
+    />
 </template>
 
 <script setup>
@@ -107,6 +114,8 @@ import { db } from '@/modules/firebase'
 import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRouter } from 'vue-router'
+import SaveSuccessPromt from '@/components/SaveSuccessPrompt.vue'
+
 
 // --- Get current user and router instance ---
 const { currentUser } = useAuth()
@@ -178,10 +187,11 @@ async function saveUserInfo() {
 }
 
 // --- Save all edits and exit edit mode for all fields ---
+const showSavedPrompt = ref(false);
 async function saveAllEdits() {
   await saveUserInfo()
   Object.keys(editMode).forEach(k=>editMode[k]=false)
-  alert('All information updated!')
+  showSavedPrompt.value = true
 }
 
 // --- Upload and update profile picture in Firebase Storage ---
@@ -224,4 +234,11 @@ async function deleteRegistration() {
     alert('Error deleting registration.')
   }
 }
+
+
+
+
+
+
+
 </script>
