@@ -114,7 +114,7 @@ import { db } from '@/modules/firebase'
 import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRouter } from 'vue-router'
-import SaveSuccessPromt from '@/components/SaveSuccessPrompt.vue'
+import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
 
 
 // --- Get current user and router instance ---
