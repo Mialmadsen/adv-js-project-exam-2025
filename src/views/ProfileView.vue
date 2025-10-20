@@ -109,7 +109,7 @@
 // --- Imports: Vue reactivity, Firebase, Auth, Router, and UI components ---
 import { ref, reactive, onMounted, watch } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'firebase/firestore'
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
+import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { db } from '@/modules/firebase'
 import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
@@ -119,7 +119,6 @@ import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
 
 // --- Get current user and router instance ---
 const { currentUser } = useAuth()
-const router = useRouter()
 
 // --- Reactive state for user data, race data, edit mode, and loading ---
 const userData = reactive({})
