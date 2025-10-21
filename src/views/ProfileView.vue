@@ -101,7 +101,7 @@
       message="Your changes have been successfully saved. Would you like to leave the page?"
       confirm-label="Yes"
       cancel-label="No"
-      :to="{ name: '/' }"
+      :to="{ name: 'home' }"
     />
 </template>
 
@@ -160,7 +160,7 @@ async function loadUserData() {
       const reg = regSnap.docs[0]
       raceData.value = { id: reg.id, ...reg.data() }
       // Merge race info into userData for participants
-      Object.assign(userData, raceData.value)
+      Object.assign(userData, raceData.value) // Kopierer alle felter fra raceData.value over i userData, så race-informationen bliver tilgængelig sammen med brugerens profiloplysninger
     }
   } catch(err){ console.error(err) }
   finally { loading.value = false }
@@ -189,7 +189,8 @@ async function saveUserInfo() {
 const showSavedPrompt = ref(false);
 async function saveAllEdits() {
   await saveUserInfo()
-  Object.keys(editMode).forEach(k=>editMode[k]=false)
+  Object.keys(editMode).forEach(k=>editMode[k]=false) // Sætter alle felter i editMode til false, så alle input-felter forlader redigeringstilstand
+
   showSavedPrompt.value = true
 }
 
