@@ -25,7 +25,7 @@ const lengthText = computed(() =>
   >
     <!-- top media block (image or brand gradient) -->
     <div class="relative mx-6 -mt-8 aspect-[16/9] overflow-hidden rounded-md shadow-lg">
-      <img v-if="image" :src="image" alt="" class="h-full w-full object-cover" />
+      <img v-if="image" :src="image" :alt="title || 'Race image'" loading="lazy" class="h-full w-full object-cover" />
       <div v-else class="h-full w-full bg-[image:var(--color-gradient)]"></div>
     </div>
 

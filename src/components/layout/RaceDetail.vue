@@ -14,8 +14,8 @@ const { race } = defineProps({
     <header class="rounded-md overflow-hidden  ring-1 ring-teal">
       <div class="h-56 sm:h-72 w-full">
         <img
-          v-if="race.heroImage"
-          :src="race.heroImage"
+          v-if="race.imageUrl"
+          :src="race.imageUrl"
           :alt="race.title"
           class="h-full w-full object-cover"
         />

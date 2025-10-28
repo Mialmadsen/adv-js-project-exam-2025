@@ -27,7 +27,7 @@ onMounted(loadAll)
         :length="r.lengthKm"
         :location="r.locationCity"
         :date="r.date"
-        :image="r.heroImage || ''"
+        :image="r.imageUrl || ''"
         :to="{ name: 'race', params: { id: r.id } }"
       />
     </div>

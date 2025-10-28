@@ -5,8 +5,13 @@ import { useRaceEditor } from '@/composables/UseRaceEditor'
 import { useUnsaved } from '@/composables/useUnsaved'
 import BackButton from '@/components/BackButton.vue'
 import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
+import { useCloudinary } from '@/composables/useCloudinary'
+import { useSnackbar } from '@/composables/useSnackbar'
 
 const props = defineProps({ id: { type: String, default: null } })
+
+const { uploadImage } = useCloudinary()
+const { showSnack } = useSnackbar()
 
 // editor data/actions
 const {
@@ -16,10 +21,23 @@ const {
   load, save, cancel
 } = useRaceEditor(props.id)
 
+async function onRaceImageSelected(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  try {
+    const url = await uploadImage(file)
+    form.imageUrl = url
+    showSnack('Image attached')
+  } catch (err) {
+    console.error(err)
+    showSnack('Image upload failed. Try another file.')
+  }
+}
 // minimal unsaved tracking (after user finishes a field)
 const { markDirty, isDirty, anyDirty, blurOnEnter,resetAll } = useUnsaved()
 
 const showSaved = ref(false)
+
 
 async function saveAndAsk() {
   const ok = await save()
@@ -161,6 +179,13 @@ onMounted(load)
             @change="markDirty('blurb')"
             :class="isDirty('blurb') ? 'bg-accent/10 border-accent/50' : ''"
           ></textarea>
+        </div>
+        <div>
+          <label class="ui-label">
+  <span class="font-medium">Card image</span>
+  <input type="file" accept="image/*" @change="onRaceImageSelected" />
+  <img v-if="form.imageUrl" :src="form.imageUrl" class="mt-2 h-24 w-auto rounded object-cover" alt="Race image preview" />
+</label>
         </div>
       </section>
 

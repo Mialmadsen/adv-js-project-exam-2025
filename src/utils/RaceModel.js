@@ -27,7 +27,8 @@ export const makeDefaults = (id = '') => ({
   perks: [''],
   equipmentPermittedNote: '',
   participantsNote: '',
-  limits: { timeHours: null, participantLimit: null }
+  limits: { timeHours: null, participantLimit: null },
+  imageUrl: ''
 })
 
 export const toFormModel = (id, d) => {
@@ -42,6 +43,7 @@ export const toFormModel = (id, d) => {
   m.locationCity = d.locationCity ?? ''
   m.locationName = d.locationName ?? ''
   m.isActive     = d.isActive ?? true
+  m.imageUrl    = d.imageUrl ?? ''
 
   for (const k of NUMBER_FIELDS) m[k] = d[k] ?? null
   for (const k of ARRAY_FIELDS)  m[k] = Array.isArray(d[k]) ? [...d[k]] : ['']
@@ -69,5 +71,6 @@ export const toPayload = (fm) => ({
   limits: {
     timeHours: toNumberOrNull(fm.limits.timeHours),
     participantLimit: toNumberOrNull(fm.limits.participantLimit)
-  }
+  },
+  imageUrl: fm.imageUrl.trim(),
 })

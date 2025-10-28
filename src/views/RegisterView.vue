@@ -59,6 +59,9 @@ import { useAuth } from '@/modules/useAuth'
 import { collection, getDocs, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db } from '@/modules/firebase'
 import BaseButton from '@/components/BaseButton.vue'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnack } = useSnackbar()
 
 
 // --- Get current user and login state from auth composable ---
@@ -81,7 +84,7 @@ async function loadRaces() {
     races.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
   } catch (err) {
     console.error(err)
-    alert("Failed to load races")
+    showSnack("Failed to load races")
   }
 }
 onMounted(() => loadRaces())
@@ -114,7 +117,7 @@ function generateBibNumber() {
 async function submitRegistration() {
   // --- Require login ---
   if (!isLoggedIn.value) {
-    alert('You must be logged in to register!')
+    showSnack('You must be logged in to register!')
     router.push('/auth/login')
     return
   }
@@ -122,7 +125,7 @@ async function submitRegistration() {
   // --- Require race selection ---
   const race = races.value.find(r => r.id === selectedRaceId.value)
   if (!race) {
-    alert("Select a race!")
+    showSnack("Select a race!")
     return
   }
 
@@ -131,7 +134,7 @@ async function submitRegistration() {
   const regRef = collection(userRef, "registrations")
   const existing = await getDocs(regRef)
   if (!existing.empty) {
-    alert(`You are already registered for a race! You cannot register again.`)
+    showSnack(`You are already registered for a race! You cannot register again.`)
     return
   }
 
@@ -170,7 +173,7 @@ async function submitRegistration() {
     router.push('/thankyou')
   } catch (err) {
     console.error("Error saving registration:", err)
-    alert("There was an error saving your registration.")
+    showSnack("There was an error saving your registration.")
   }
 }
 </script>

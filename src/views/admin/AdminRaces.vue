@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { collection, getDocs, query, orderBy, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/modules/firebase'
 import BaseButton from '@/components/BaseButton.vue'
 import BackButton from '@/components/BackButton.vue'
@@ -11,6 +11,18 @@ const router  = useRouter()
 const races   = ref([])
 const loading = ref(true)
 const error   = ref(null)
+
+const deleteRace = async (id, title) => {
+  const confirmDelete = confirm(`Delete race "${title}"? This cannot be undone.`)
+  if (!confirmDelete) return
+
+  try {
+    await deleteDoc(doc(db, 'races', id))
+    races.value = races.value.filter(r => r.id !== id) // update UI
+  } catch (e) {
+    error.value = e?.message ?? String(e)
+  }
+}
 
 onMounted(async () => {
   try {
@@ -33,6 +45,7 @@ const timeLimit = (r) => r?.limits?.timeHours ? `${r.limits.timeHours} h` : '—
 const partLimit = (r) => r?.limits?.participantLimit ?? '—'
 const dateText  = (r) => r?.date || '—'
 const editRace  = (id) => router.push({ name: 'admin-race-edit', params: { id } })
+const createRace = () => router.push({ name: 'admin-race-new' })
 
 // header color cycle (fits your palette)
 const headerHues = [
@@ -48,7 +61,10 @@ const colColor = (i) => headerHues[i % headerHues.length]
   <section class="space-y-6">
     <header>
       <h1 class="font-title text-3xl text-accent">Races</h1>
+
     </header>
+
+
 
     <!-- Loading / error / empty -->
     <div v-if="loading" class="admin-card text-text/70">Loading…</div>
@@ -59,6 +75,14 @@ const colColor = (i) => headerHues[i % headerHues.length]
 
     <!-- MOBILE: stacked cards -->
     <div v-else class="grid gap-4">
+      <div class="mt-4 flex justify-end">
+
+
+  <BaseButton variant="solid" size="sm" @click="createRace">+ New race</BaseButton>
+
+      </div>
+
+
       <article
         v-for="(r,i) in races"
         :key="r.id"
@@ -91,8 +115,18 @@ const colColor = (i) => headerHues[i % headerHues.length]
           </div>
         </dl>
 
-        <div class="mt-4 flex justify-end">
-          <BaseButton variant="outline" size="sm" @click="editRace(r.id)">Edit</BaseButton>
+        <div class="mt-4 flex justify-between">
+
+          <BaseButton
+  variant="outline"
+  size="sm"
+
+  @click="deleteRace(r.id, r.title)"
+>
+  Delete
+</BaseButton>
+          <BaseButton variant="solid" size="sm" @click="editRace(r.id)">Edit</BaseButton>
+
         </div>
       </article>
     </div>

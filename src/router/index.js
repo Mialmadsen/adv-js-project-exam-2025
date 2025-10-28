@@ -33,12 +33,19 @@ const routes = [
   { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/admin', name: 'admin',   component: AdminDashboard,  meta: { requiresAuth: true, requiresAdmin: true } },
   { path: '/admin/races', name: 'admin-races',   component: AdminRaces,   meta: { requiresAuth: true, requiresAdmin: true } },
-   { path: '/admin/races/:id',    name: 'admin-race-edit',  component: AdminRaceEditor, props: true, meta: { requiresAuth: true, requiresAdmin: true } },
+   { path: '/admin/race/:id?',    name: 'admin-race-edit',  component: AdminRaceEditor, props: true, meta: { requiresAuth: true, requiresAdmin: true } },
    {
   path: '/admin/users',
   name: 'admin-users',
   component: () => import('@/views/admin/AdminUsers.vue'),
   meta: { requiresAdmin: true } // uses your existing admin guard
+},
+{
+  path: '/admin/races/new',
+  name: 'admin-race-new',
+  component: AdminRaceEditor,
+  props: { id: null },                 // force create mode
+  meta: { requiresAuth: true, requiresAdmin: true }
 },
 
   { path: '/:pathMatch(.*)*', name: '404', component: NotFoundView },

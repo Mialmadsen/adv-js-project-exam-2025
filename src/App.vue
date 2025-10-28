@@ -3,6 +3,8 @@ import AppShell from '@/components/layout/AppShell.vue';
 
 import AppHeader from '@/components/layout/AppHeader.vue';
 
+import BaseSnackbar from './components/BaseSnackbar.vue';
+
 
 </script>
 
@@ -12,7 +14,8 @@ import AppHeader from '@/components/layout/AppHeader.vue';
     <template #header>
       <AppHeader />
     </template>
-    
+
     <RouterView />
   </AppShell>
+  <BaseSnackbar />
 </template>

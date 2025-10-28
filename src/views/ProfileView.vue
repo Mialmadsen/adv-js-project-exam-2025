@@ -109,13 +109,16 @@
 // --- Imports: Vue reactivity, Firebase, Auth, Router, and UI components ---
 import { ref, reactive, onMounted, watch } from 'vue'
 import { doc, getDoc, collection, getDocs, setDoc, deleteDoc } from 'firebase/firestore'
-import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from 'firebase/storage'
+
 import { db } from '@/modules/firebase'
 import { useAuth } from '@/modules/useAuth'
 import BaseButton from '@/components/BaseButton.vue'
-import { useRouter } from 'vue-router'
-import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
 
+import SaveSuccessPrompt from '@/components/SaveSuccessPrompt.vue'
+import { useCloudinary } from '@/composables/useCloudinary'
+import { useSnackbar } from '@/composables/useSnackbar'
+
+const { showSnack } = useSnackbar()
 
 // --- Get current user and router instance ---
 const { currentUser } = useAuth()
@@ -126,6 +129,7 @@ const raceData = ref(null)
 const editMode = reactive({})
 const defaultAvatar = '/default-avatar.png'
 const loading = ref(true)
+const { uploadImage } = useCloudinary()
 
 // --- List of countries for nationality select field ---
 const countries = ["Denmark","Sweden","Norway","Finland","Germany","France","UK","USA","Canada","Ukraine","Poland","Netherlands","Other"]
@@ -182,7 +186,7 @@ async function saveUserInfo() {
   try {
     await setDoc(doc(db, 'users', currentUser.value.uid), userData, { merge:true })
     await setDoc(doc(db, 'participants', currentUser.value.uid), userData, { merge:true })
-  } catch(err){ console.error(err); alert('Error saving user info.') }
+  } catch(err){ console.error(err); showSnack('Error saving user info.') }
 }
 
 // --- Save all edits and exit edit mode for all fields ---
@@ -194,25 +198,25 @@ async function saveAllEdits() {
   showSavedPrompt.value = true
 }
 
-// --- Upload and update profile picture in Firebase Storage ---
+// --- Upload and update profile picture via Cloudinary URL ---
 async function uploadProfilePic(e) {
-  const file = e.target.files[0]
+  const file = e.target.files?.[0]
   if (!file || !currentUser.value) return
-  const storage = getStorage()
-  const fileRef = sRef(storage, `profilePics/${currentUser.value.uid}`)
   try {
-    await uploadBytes(fileRef,file)
-    const url = await getDownloadURL(fileRef)
-    userData.photoURL = url
-    await saveUserInfo()
-    alert('Profile picture updated!')
-  } catch(err){ console.error(err); alert('Failed to upload profile picture.') }
+    const url = await uploadImage(file)  // SRP: only gets URL
+    userData.photoURL = url              //  reactive state
+    await saveUserInfo()                 // existing Firestore updater
+    showSnack('Profile picture updated!')
+  } catch (err) {
+    console.error(err)
+    showSnack('Failed to upload profile picture.')
+  }
 }
 
 // --- Delete race registration from Firestore and participants collection ---
 async function deleteRegistration() {
-  if (!raceData.value) { 
-    alert('No registration to delete.'); 
+  if (!raceData.value) {
+    showSnack('No registration to delete.');
     return;
   }
   if (!confirm('Are you sure you want to delete your race registration?')) return;
@@ -228,10 +232,10 @@ async function deleteRegistration() {
 
     raceData.value = null
 
-    alert('Your race registration has been deleted.')
+    showSnack('Your race registration has been deleted.')
   } catch(err){
     console.error(err)
-    alert('Error deleting registration.')
+    showSnack('Error deleting registration.')
   }
 }
 
