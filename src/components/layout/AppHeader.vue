@@ -42,6 +42,15 @@ async function handleSignOut() {
     router.replace({ path: '/' }) // or { name: "home" }
   }
 }
+
+// helper used by mobile menu: sign out then close mobile nav
+async function signOutAndClose() {
+  try {
+    await handleSignOut()
+  } finally {
+    menuOpen.value = false
+  }
+}
 </script>
 
 <template>
@@ -188,10 +197,7 @@ async function handleSignOut() {
 
                 <button
                   class="font-body hover:bg-bg w-full px-4 py-2.5 text-left text-lg hover:rounded-md"
-                  @click="
-                    handleSignOut()
-                    close()
-                  "
+                  @click="(handleSignOut(), close())"
                 >
                   <i class="fa-solid fa-right-from-bracket"></i> Sign out
                 </button>
@@ -321,13 +327,7 @@ async function handleSignOut() {
           </li>
 
           <li v-if="isAuthed">
-            <button
-              class="hover:text-text py-2.5 text-left"
-              @click="
-                handleSignOut()
-                menuOpen = false
-              "
-            >
+            <button class="hover:text-text py-2.5 text-left" @click="signOutAndClose">
               <i class="fa-solid fa-right-from-bracket"></i>
 
               Sign out
