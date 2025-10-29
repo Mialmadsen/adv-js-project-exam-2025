@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import BaseButton from '@/components/BaseButton.vue'
 import { useRaceEditor } from '@/composables/UseRaceEditor'
 import { useUnsaved } from '@/composables/useUnsaved'
@@ -14,12 +14,8 @@ const { uploadImage } = useCloudinary()
 const { showSnack } = useSnackbar()
 
 // editor data/actions
-const {
-  form, loading, saving, errorMsg,
-  isEdit, pageTitle,
-  lists,
-  load, save, cancel
-} = useRaceEditor(props.id)
+const { form, loading, saving, errorMsg, isEdit, pageTitle, lists, load, save, cancel } =
+  useRaceEditor(props.id)
 
 async function onRaceImageSelected(e) {
   const file = e.target.files?.[0]
@@ -34,34 +30,30 @@ async function onRaceImageSelected(e) {
   }
 }
 // minimal unsaved tracking (after user finishes a field)
-const { markDirty, isDirty, anyDirty, blurOnEnter,resetAll } = useUnsaved()
+const { markDirty, isDirty, anyDirty, blurOnEnter, resetAll } = useUnsaved()
 
 const showSaved = ref(false)
-
 
 async function saveAndAsk() {
   const ok = await save()
   if (ok) {
-     resetAll()
+    resetAll()
     showSaved.value = true
-}}
+  }
+}
 
 onMounted(load)
 </script>
 
 <template>
-  <div class="p-6 space-y-6">
-    <header class="flex items-center gap-3 justify-between">
-      <h1 class="font-title text-3xl text-accent">{{ pageTitle }}</h1>
+  <div class="space-y-6 p-6">
+    <header class="flex items-center justify-between gap-3">
+      <h1 class="font-title text-accent text-3xl">{{ pageTitle }}</h1>
 
       <div class="ml-auto flex items-center gap-4">
         <!-- tiny badge only when something was edited -->
-        <span
-          v-if="anyDirty"
-
-          class="rounded-md text-danger px-3 py-1 text-xs font-title "
-        >
-           Unsaved changes
+        <span v-if="anyDirty" class="text-danger font-title rounded-md px-3 py-1 text-xs">
+          Unsaved changes
         </span>
 
         <div class="flex gap-3">
@@ -78,7 +70,7 @@ onMounted(load)
     <div v-else class="grid gap-6 md:grid-cols-3">
       <!-- Left column -->
       <section class="admin-card space-y-4 md:col-span-2">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div v-if="!isEdit">
             <label class="ui-label">ID</label>
             <input
@@ -182,10 +174,15 @@ onMounted(load)
         </div>
         <div>
           <label class="ui-label">
-  <span class="font-medium">Card image</span>
-  <input type="file" accept="image/*" @change="onRaceImageSelected" />
-  <img v-if="form.imageUrl" :src="form.imageUrl" class="mt-2 h-24 w-auto rounded object-cover" alt="Race image preview" />
-</label>
+            <span class="font-medium">Card image</span>
+            <input type="file" accept="image/*" @change="onRaceImageSelected" />
+            <img
+              v-if="form.imageUrl"
+              :src="form.imageUrl"
+              class="mt-2 h-24 w-auto rounded object-cover"
+              alt="Race image preview"
+            />
+          </label>
         </div>
       </section>
 
@@ -272,25 +269,37 @@ onMounted(load)
 
       <!-- Arrays / Repeaters -->
       <section class="admin-card space-y-5 md:col-span-3">
-        <h2 class="font-title text-xl text-brand">Course outline</h2>
+        <h2 class="font-title text-brand text-xl">Course outline</h2>
         <div class="space-y-3">
-          <div v-for="(_, idx) in form.courseOutline" :key="'co-'+idx" class="flex gap-2 flex-col sm:flex-row">
+          <div
+            v-for="(_, idx) in form.courseOutline"
+            :key="'co-' + idx"
+            class="flex flex-col gap-2 sm:flex-row"
+          >
             <input
               v-model="form.courseOutline[idx]"
               class="ui-input flex-1"
-              :placeholder="`Step ${idx+1}`"
+              :placeholder="`Step ${idx + 1}`"
               @keydown="blurOnEnter"
               @change="markDirty(`courseOutline.${idx}`)"
               :class="isDirty(`courseOutline.${idx}`) ? 'bg-accent/10 border-accent/50' : ''"
             />
-            <BaseButton variant="outline" size="sm" @click="lists.courseOutline.remove(idx)">Remove</BaseButton>
+            <BaseButton variant="outline" size="sm" @click="lists.courseOutline.remove(idx)"
+              >Remove</BaseButton
+            >
           </div>
-          <BaseButton variant="solid" size="sm" @click="lists.courseOutline.add()">+ Add step</BaseButton>
+          <BaseButton variant="solid" size="sm" @click="lists.courseOutline.add()"
+            >+ Add step</BaseButton
+          >
         </div>
 
-        <h2 class="font-title text-xl text-brand mt-6">Equipment — Mandatory</h2>
+        <h2 class="font-title text-brand mt-6 text-xl">Equipment — Mandatory</h2>
         <div class="space-y-3">
-          <div v-for="(_, idx) in form.equipmentMandatory" :key="'em-'+idx" class="flex gap-2 flex-col sm:flex-row">
+          <div
+            v-for="(_, idx) in form.equipmentMandatory"
+            :key="'em-' + idx"
+            class="flex flex-col gap-2 sm:flex-row"
+          >
             <input
               v-model="form.equipmentMandatory[idx]"
               class="ui-input flex-1"
@@ -299,14 +308,22 @@ onMounted(load)
               @change="markDirty(`equipmentMandatory.${idx}`)"
               :class="isDirty(`equipmentMandatory.${idx}`) ? 'bg-accent/10 border-accent/50' : ''"
             />
-            <BaseButton variant="outline" size="sm" @click="lists.equipmentMandatory.remove(idx)">Remove</BaseButton>
+            <BaseButton variant="outline" size="sm" @click="lists.equipmentMandatory.remove(idx)"
+              >Remove</BaseButton
+            >
           </div>
-          <BaseButton variant="solid" size="sm" @click="lists.equipmentMandatory.add()">+ Add item</BaseButton>
+          <BaseButton variant="solid" size="sm" @click="lists.equipmentMandatory.add()"
+            >+ Add item</BaseButton
+          >
         </div>
 
-        <h2 class="font-title text-xl text-brand mt-6">Equipment — Recommended</h2>
+        <h2 class="font-title text-brand mt-6 text-xl">Equipment — Recommended</h2>
         <div class="space-y-3">
-          <div v-for="(_, idx) in form.equipmentRecommended" :key="'er-'+idx" class="flex gap-2 flex-col sm:flex-row">
+          <div
+            v-for="(_, idx) in form.equipmentRecommended"
+            :key="'er-' + idx"
+            class="flex flex-col gap-2 sm:flex-row"
+          >
             <input
               v-model="form.equipmentRecommended[idx]"
               class="ui-input flex-1"
@@ -315,14 +332,22 @@ onMounted(load)
               @change="markDirty(`equipmentRecommended.${idx}`)"
               :class="isDirty(`equipmentRecommended.${idx}`) ? 'bg-accent/10 border-accent/50' : ''"
             />
-            <BaseButton variant="outline" size="sm" @click="lists.equipmentRecommended.remove(idx)">Remove</BaseButton>
+            <BaseButton variant="outline" size="sm" @click="lists.equipmentRecommended.remove(idx)"
+              >Remove</BaseButton
+            >
           </div>
-          <BaseButton variant="solid" size="sm" @click="lists.equipmentRecommended.add()">+ Add item</BaseButton>
+          <BaseButton variant="solid" size="sm" @click="lists.equipmentRecommended.add()"
+            >+ Add item</BaseButton
+          >
         </div>
 
-        <h2 class="font-title text-xl text-brand mt-6">Perks</h2>
+        <h2 class="font-title text-brand mt-6 text-xl">Perks</h2>
         <div class="space-y-3">
-          <div v-for="(_, idx) in form.perks" :key="'pk-'+idx" class="flex gap-2 flex-col sm:flex-row">
+          <div
+            v-for="(_, idx) in form.perks"
+            :key="'pk-' + idx"
+            class="flex flex-col gap-2 sm:flex-row"
+          >
             <input
               v-model="form.perks[idx]"
               class="ui-input flex-1"
@@ -331,7 +356,9 @@ onMounted(load)
               @change="markDirty(`perks.${idx}`)"
               :class="isDirty(`perks.${idx}`) ? 'bg-accent/10 border-accent/50' : ''"
             />
-            <BaseButton variant="outline" size="sm" @click="lists.perks.remove(idx)">Remove</BaseButton>
+            <BaseButton variant="outline" size="sm" @click="lists.perks.remove(idx)"
+              >Remove</BaseButton
+            >
           </div>
           <BaseButton variant="solid" size="sm" @click="lists.perks.add()">+ Add perk</BaseButton>
         </div>
@@ -366,18 +393,13 @@ onMounted(load)
       </section>
     </div>
 
-    <div class="flex items-center gap-3 justify-between">
-       <BackButton size="sm" />
+    <div class="flex items-center justify-between gap-3">
+      <BackButton size="sm" />
 
-
-      <div class="ml-auto flex items-center gap-4 ">
+      <div class="ml-auto flex items-center gap-4">
         <!-- tiny badge only when something was edited -->
-        <span
-          v-if="anyDirty"
-
-          class="rounded-md text-danger px-3 py-1 text-xs font-title "
-        >
-           Unsaved changes
+        <span v-if="anyDirty" class="text-danger font-title rounded-md px-3 py-1 text-xs">
+          Unsaved changes
         </span>
 
         <div class="flex gap-3">
@@ -389,17 +411,15 @@ onMounted(load)
       </div>
     </div>
 
-
     <p v-if="errorMsg" class="text-danger">{{ errorMsg }}</p>
-      <!-- success prompt -->
-    <SaveSuccessPrompt v-model:open="showSaved"
+    <!-- success prompt -->
+    <SaveSuccessPrompt
+      v-model:open="showSaved"
       title="Saved"
       message="Your changes have been successfully saved. Would you like to leave the page?"
       confirm-label="Yes"
       cancel-label="No"
       :to="{ name: 'admin-races' }"
     />
-
-
   </div>
 </template>

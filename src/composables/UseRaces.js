@@ -3,9 +3,9 @@ import { db } from '@/modules/firebase'
 import { collection, getDocs } from 'firebase/firestore'
 
 export function useRaces() {
-  const races   = ref([])
+  const races = ref([])
   const loading = ref(false)
-  const error   = ref('')
+  const error = ref('')
 
   async function loadAll() {
     loading.value = true
@@ -13,7 +13,7 @@ export function useRaces() {
     try {
       const snap = await getDocs(collection(db, 'races'))
       races.value = snap.docs
-        .map(d => ({ id: d.id, ...d.data() }))
+        .map((d) => ({ id: d.id, ...d.data() }))
         .sort((a, b) => (a.title || '').localeCompare(b.title || ''))
     } catch (e) {
       error.value = e.message || 'Failed to load races.'

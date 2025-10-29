@@ -1,15 +1,14 @@
 <script setup>
-
 defineProps({
   participants: { type: Array, default: () => [] },
   admin: { type: Boolean, default: false }, // if you ever want admin-only columns here
-  firstNameFn: { type: Function, default: (n) => (n || "").trim().split(/\s+/)[0] || "" }
-});
-const emit = defineEmits(["select"]);
+  firstNameFn: { type: Function, default: (n) => (n || '').trim().split(/\s+/)[0] || '' },
+})
+const emit = defineEmits(['select'])
 
 function onRowClick(p) {
   // emit only for admin (public click does nothing)
-  emit("select", p);
+  emit('select', p)
 }
 </script>
 
@@ -28,7 +27,7 @@ function onRowClick(p) {
       <tr
         v-for="p in participants"
         :key="p.id"
-        class="border-t border-text/5 hover:bg-bg/40 cursor-pointer"
+        class="border-text/5 hover:bg-bg/40 cursor-pointer border-t"
         @click="onRowClick(p)"
         :title="`Open ${p.fullName || 'participant'} details`"
       >

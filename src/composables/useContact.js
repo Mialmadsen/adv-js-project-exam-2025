@@ -10,8 +10,7 @@ export function useContact() {
     if (!user?.email) return
 
     const subject =
-      opts.subject ??
-      `SwimRunIF — Account & registrations (${user.fullName || user.email})`
+      opts.subject ?? `SwimRunIF — Account & registrations (${user.fullName || user.email})`
 
     const defaultBody = [
       `Hi ${user.fullName || ''},`,
@@ -19,14 +18,14 @@ export function useContact() {
       'This is the SwimRunIF admin team.',
       '',
       'Best,',
-      'SwimRunIF Admin'
+      'SwimRunIF Admin',
     ]
     const bodyLines = opts.bodyLines?.length ? opts.bodyLines : defaultBody
 
     const mailto = [
       `mailto:${encodeURIComponent(user.email)}`,
       `?subject=${encodeURIComponent(subject)}`,
-      `&body=${encodeURIComponent(bodyLines.join('\n'))}`
+      `&body=${encodeURIComponent(bodyLines.join('\n'))}`,
     ].join('')
 
     window.location.href = mailto

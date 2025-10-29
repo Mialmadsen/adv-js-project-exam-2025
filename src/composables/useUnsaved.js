@@ -8,8 +8,10 @@ export function useUnsaved() {
     next.add(key)
     keys.value = next
   }
-  function resetAll() { keys.value = new Set() }
-  const isDirty  = (key) => keys.value.has(key)
+  function resetAll() {
+    keys.value = new Set()
+  }
+  const isDirty = (key) => keys.value.has(key)
   const anyDirty = computed(() => keys.value.size > 0)
 
   // helper: turn Enter into blur (to signal “done”)

@@ -10,7 +10,10 @@ const error = ref(null)
 let unsub = null
 
 function stop() {
-  if (unsub) { unsub(); unsub = null }
+  if (unsub) {
+    unsub()
+    unsub = null
+  }
 }
 
 export function useUserProfile() {
@@ -24,18 +27,28 @@ export function useUserProfile() {
     }
     loading.value = true
     const refDoc = doc(db, 'users', currentUser.value.uid)
-    unsub = onSnapshot(refDoc,
-      snap => {
+    unsub = onSnapshot(
+      refDoc,
+      (snap) => {
         profile.value = snap.exists() ? { id: snap.id, ...snap.data() } : null
         loading.value = false
         error.value = null
       },
-      e => { error.value = e; loading.value = false }
+      (e) => {
+        error.value = e
+        loading.value = false
+      },
     )
   }
 
   // Load once auth state is known, and whenever user changes.
-  watch(authReady, ready => { if (ready) load() }, { immediate: true })
+  watch(
+    authReady,
+    (ready) => {
+      if (ready) load()
+    },
+    { immediate: true },
+  )
   watch(currentUser, () => load())
 
   onUnmounted(stop)

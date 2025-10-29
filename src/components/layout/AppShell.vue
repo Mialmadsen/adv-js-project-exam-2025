@@ -1,14 +1,12 @@
 <script setup>
 // --- Import Container layout component ---
-import Container from '@/components/layout/Container.vue'
-
-
+import Container from '@/components/layout/SiteContainer.vue'
 </script>
 
 <template>
-  <div class="min-h-screen w-full bg-bg text-text">
+  <div class="bg-bg text-text min-h-screen w-full">
     <!-- === Header Slot (for navigation/header content) === -->
-    <header class="sticky top-0 z-50 w-full max-auto">
+    <header class="max-auto sticky top-0 z-50 w-full">
       <slot name="header" />
     </header>
 
@@ -20,9 +18,9 @@ import Container from '@/components/layout/Container.vue'
     </main>
 
     <!-- === Footer with copyright and dev-only role switcher === -->
-    <footer class="mt-12 border-t border-brand/10">
+    <footer class="border-brand/10 mt-12 border-t">
       <Container>
-        <div class="py-6 flex items-center justify-between text-sm text-text/70 gap-4">
+        <div class="text-text/70 flex items-center justify-between gap-4 py-6 text-sm">
           <!-- Copyright -->
           <div>© SwimRunIF 2025</div>
         </div>
@@ -30,5 +28,3 @@ import Container from '@/components/layout/Container.vue'
     </footer>
   </div>
 </template>
-
-

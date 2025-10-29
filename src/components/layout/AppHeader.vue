@@ -5,9 +5,8 @@ import MenuDropdown from '@/components/MenuDropdown.vue'
 import { useRole } from '@/composables/useRole'
 import { useAuth } from '@/modules/useAuth'
 import { useUserProfile } from '@/composables/useUserProfile'
-import { useRouter } from "vue-router";
-const router = useRouter();
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 /* mobile nav toggle */
 const menuOpen = ref(false)
@@ -32,37 +31,34 @@ const displayName = computed(() => {
 const initial = computed(() => (displayName.value?.[0] || 'U').toUpperCase())
 
 function firstName(name) {
-  return (name || '').trim().split(' ')[0] || '';
+  return (name || '').trim().split(' ')[0] || ''
 }
 
 async function handleSignOut() {
   try {
-    await logout();
+    await logout()
   } finally {
     // close menus etc. here if needed
-    router.replace({ path: "/" }); // or { name: "home" }
+    router.replace({ path: '/' }) // or { name: "home" }
   }
 }
-
 </script>
 
 <template>
   <!-- outer padding so the rounded bar doesn’t touch edges -->
-  <div class="p-2 w-full">
+  <div class="w-full p-2">
     <!-- the rounded header bar -->
-    <div
-      class="rounded-md bg-teal/30  backdrop-blur-[2px] shadow-xsm border border-teal-400/10" >
-      <div class="flex items-center justify-between px-4 sm:px-6 py-3">
+    <div class="bg-teal/30 shadow-xsm rounded-md border border-teal-400/10 backdrop-blur-[2px]">
+      <div class="flex items-center justify-between px-4 py-3 sm:px-6">
         <!-- Logo / Brand -->
-        <RouterLink to="/" >
+        <RouterLink to="/">
           <img :src="logoUrl" alt="SwimRunIF logo" class="h-12 w-12" />
         </RouterLink>
 
         <!-- Desktop nav -->
-        <nav class="hidden md:flex items-center gap-8 font-body font-medium text-lg text-text">
-
-                            <!-- Races: word scrolls menu -->
-            <MenuDropdown>
+        <nav class="font-body text-text hidden items-center gap-8 text-lg font-medium md:flex">
+          <!-- Races: word scrolls menu -->
+          <MenuDropdown>
             <!-- trigger: word scrolls to #races, arrow toggles menu -->
             <template #trigger="{ toggle }">
               <div class="flex items-center gap-2">
@@ -70,11 +66,10 @@ async function handleSignOut() {
                   Races
                 </RouterLink>
                 <button
-                  class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
+                  class="text-text/80 hover:text-text hover:bg-teal rounded-md p-1.5"
                   @click="toggle"
                   aria-label="Open races menu"
                   aria-haspopup="menu"
-
                 >
                   <i class="fa-solid fa-chevron-down"></i>
                 </button>
@@ -85,14 +80,14 @@ async function handleSignOut() {
             <template #default="{ close }">
               <RouterLink
                 :to="{ name: 'race', params: { id: 'hard' } }"
-                class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
                 @click="close()"
               >
                 <i class="fa-solid fa-person-swimming"></i> SwimRun HARD
               </RouterLink>
               <RouterLink
                 :to="{ name: 'race', params: { id: 'light' } }"
-                class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
+                class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
                 @click="close()"
               >
                 <i class="fa-solid fa-person-swimming"></i> SwimRun LIGHT
@@ -100,235 +95,256 @@ async function handleSignOut() {
             </template>
           </MenuDropdown>
 
-
-
-
           <!-- Runners dropdown -->
-<MenuDropdown>
-  <!-- trigger -->
-  <template #trigger="{ toggle }">
-    <div class="flex items-center gap-2">
-      <RouterLink :to="{ name: 'participants' }" class="hover:text-teal">
-        Participants
-      </RouterLink>
-      <button
-        class="p-1.5 rounded-md text-text/80 hover:text-text hover:bg-teal"
-        @click="toggle"
-        aria-label="Open runners menu"
-        aria-haspopup="menu"
-      >
-        <i class="fa-solid fa-chevron-down"></i>
-      </button>
-    </div>
-  </template>
+          <MenuDropdown>
+            <!-- trigger -->
+            <template #trigger="{ toggle }">
+              <div class="flex items-center gap-2">
+                <RouterLink :to="{ name: 'participants' }" class="hover:text-teal">
+                  Participants
+                </RouterLink>
+                <button
+                  class="text-text/80 hover:text-text hover:bg-teal rounded-md p-1.5"
+                  @click="toggle"
+                  aria-label="Open runners menu"
+                  aria-haspopup="menu"
+                >
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </div>
+            </template>
 
-  <!-- panel items -->
-  <template #default="{ close }">
-    <RouterLink
-      :to="{ name: 'participants', query: { race: 'hard' } }"
-      class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-      @click="close()"
-    >
-      <i class="fa-solid fa-users"></i> HARD — Start list
-    </RouterLink>
+            <!-- panel items -->
+            <template #default="{ close }">
+              <RouterLink
+                :to="{ name: 'participants', query: { race: 'hard' } }"
+                class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                @click="close()"
+              >
+                <i class="fa-solid fa-users"></i> HARD — Start list
+              </RouterLink>
 
-    <RouterLink
-      :to="{ name: 'participants', query: { race: 'light' } }"
-      class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-      @click="close()"
-    >
-      <i class="fa-solid fa-users"></i> LIGHT — Start list
-    </RouterLink>
-  </template>
-</MenuDropdown>
-
-
+              <RouterLink
+                :to="{ name: 'participants', query: { race: 'light' } }"
+                class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                @click="close()"
+              >
+                <i class="fa-solid fa-users"></i> LIGHT — Start list
+              </RouterLink>
+            </template>
+          </MenuDropdown>
         </nav>
 
-      <!-- Right side -->
-<div class="hidden md:flex items-center gap-5 text-lg  text-text/80">
-  <!-- GUEST: show login icon -->
-  <template v-if="!isAuthed">
-    <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
-      <i class="fa-solid fa-user text-lg text-text hover:text-teal"></i>
-    </RouterLink>
-  </template>
+        <!-- Right side -->
+        <div class="text-text/80 hidden items-center gap-5 text-lg md:flex">
+          <!-- GUEST: show login icon -->
+          <template v-if="!isAuthed">
+            <RouterLink to="/auth/login" aria-label="Account" class="hover:text-text">
+              <i class="fa-solid fa-user text-text hover:text-teal text-lg"></i>
+            </RouterLink>
+          </template>
 
-  <!-- AUThed: avatar + greeting + dropdown -->
-  <template v-else>
-    <MenuDropdown align="right">
-      <!-- trigger -->
-      <template #trigger="{ toggle }">
-        <button
-          class="flex items-center gap-2 rounded-md px-2 py-1 text-text"
-          @click="toggle"
-          aria-label="Open profile menu"
-        >
-          <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 hover:bg-teal ring-teal flex items-center justify-center text-text font-title">
-            {{ initial }}
-          </div>
-          <span class="font-body font-semibold">Hi, {{firstName(displayName) }}</span>
-          <i class="fa-solid fa-chevron-down"></i>
-        </button>
-      </template>
+          <!-- AUThed: avatar + greeting + dropdown -->
+          <template v-else>
+            <MenuDropdown align="right">
+              <!-- trigger -->
+              <template #trigger="{ toggle }">
+                <button
+                  class="text-text flex items-center gap-2 rounded-md px-2 py-1"
+                  @click="toggle"
+                  aria-label="Open profile menu"
+                >
+                  <div
+                    class="bg-teal/40 hover:bg-teal ring-teal text-text font-title flex h-8 w-8 items-center justify-center rounded-full ring-2"
+                  >
+                    {{ initial }}
+                  </div>
+                  <span class="font-body font-semibold">Hi, {{ firstName(displayName) }}</span>
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+              </template>
 
-      <!-- menu -->
-      <template #default="{ close } ">
-         <!-- If ADMIN: Dashboard -->
-  <RouterLink
-    v-if="isAdmin"
-    to="/admin"
-    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-    @click="close()"
-  >
-    <i class="fa-solid fa-gauge-high font-medium text-lg text-text"></i> Dashboard
-  </RouterLink>
+              <!-- menu -->
+              <template #default="{ close }">
+                <!-- If ADMIN: Dashboard -->
+                <RouterLink
+                  v-if="isAdmin"
+                  to="/admin"
+                  class="font-body hover:bg-bg block px-4 py-2.5 text-lg hover:rounded-md"
+                  @click="close()"
+                >
+                  <i class="fa-solid fa-gauge-high text-text text-lg font-medium"></i> Dashboard
+                </RouterLink>
 
-  <!-- If USER: Profile -->
-  <RouterLink
-    v-else
-    to="/profile"
-    class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-    @click="close()"
-  >
-    <i class="fa-solid fa-passport font-medium text-lg text-text" ></i> Profile
-  </RouterLink>
+                <!-- If USER: Profile -->
+                <RouterLink
+                  v-else
+                  to="/profile"
+                  class="font-body hover:bg-bg block px-4 py-2.5 text-lg hover:rounded-md"
+                  @click="close()"
+                >
+                  <i class="fa-solid fa-passport text-text text-lg font-medium"></i> Profile
+                </RouterLink>
 
-        <button
-          class="w-full text-left px-4 py-2.5 font-body hover:bg-bg hover:rounded-md text-lg"
-          @click="handleSignOut(); close()"
-        >
-          <i class="fa-solid fa-right-from-bracket"></i> Sign out
-        </button>
-      </template>
-    </MenuDropdown>
-  </template>
+                <button
+                  class="font-body hover:bg-bg w-full px-4 py-2.5 text-left text-lg hover:rounded-md"
+                  @click="
+                    handleSignOut()
+                    close()
+                  "
+                >
+                  <i class="fa-solid fa-right-from-bracket"></i> Sign out
+                </button>
+              </template>
+            </MenuDropdown>
+          </template>
 
-  <!-- checkout cart -->
-  <RouterLink v-if="!isAdmin" to="/register/hard" aria-label="Register" class="hover:text-text">
-    <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>
-  </RouterLink>
-</div>
+          <!-- checkout cart -->
+          <RouterLink
+            v-if="!isAdmin"
+            to="/register/hard"
+            aria-label="Register"
+            class="hover:text-text"
+          >
+            <i class="fa-solid fa-cart-shopping text-text hover:text-teal text-lg"></i>
+          </RouterLink>
+        </div>
 
         <!-- Mobile menu button -->
-          <!-- Mobile: avatar + greeting (no chevron, no dropdown) -->
-<div v-if="isAuthed" class="md:hidden flex items-center gap-2 text-text/90">
-  <div class="h-8 w-8 rounded-full bg-teal/40 ring-2 ring-teal grid place-items-center font-title">
-    {{ initial }}
-  </div>
-  <span class="text-lg font-semibold">Hi, {{firstName(displayName) }}</span>
-</div>
+        <!-- Mobile: avatar + greeting (no chevron, no dropdown) -->
+        <div v-if="isAuthed" class="text-text/90 flex items-center gap-2 md:hidden">
+          <div
+            class="bg-teal/40 ring-teal font-title grid h-8 w-8 place-items-center rounded-full ring-2"
+          >
+            {{ initial }}
+          </div>
+          <span class="text-lg font-semibold">Hi, {{ firstName(displayName) }}</span>
+        </div>
 
-          <button
-          class="md:hidden rounded-md px-3 py-2 text-text "
+        <button
+          class="text-text rounded-md px-3 py-2 md:hidden"
           @click="menuOpen = !menuOpen"
           aria-label="Toggle menu"
         >
           <!-- burger -->
-           <i v-if="!menuOpen" class="fa-solid fa-bars text-2xl"></i>
-
+          <i v-if="!menuOpen" class="fa-solid fa-bars text-2xl"></i>
 
           <!-- close -->
-           <i v-else class="fa-solid fa-xmark text-2xl"></i>
-
+          <i v-else class="fa-solid fa-xmark text-2xl"></i>
         </button>
-
       </div>
 
       <!-- Mobile nav panel -->
-      <div v-if="menuOpen" class="md:hidden border-top border-teal px-4 sm:px-6 py-3 font-body font-semibold">
-  <ul class="flex flex-col gap-3">
+      <div
+        v-if="menuOpen"
+        class="border-top border-teal font-body px-4 py-3 font-semibold sm:px-6 md:hidden"
+      >
+        <ul class="flex flex-col gap-3">
+          <!-- Races group -->
+          <li class="border-teal border-t-1">
+            <RouterLink to="/" class="hover:text-text py-1" @click="menuOpen = false"
+              >Races</RouterLink
+            >
+            <ul class="mt-1">
+              <li>
+                <RouterLink
+                  :to="{ name: 'race', params: { id: 'hard' } }"
+                  class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                  @click="menuOpen = false"
+                >
+                  <i class="fa-solid fa-person-swimming"></i> SwimRun HARD
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="{ name: 'race', params: { id: 'light' } }"
+                  class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                  @click="menuOpen = false"
+                >
+                  <i class="fa-solid fa-person-swimming"></i> SwimRun LIGHT
+                </RouterLink>
+              </li>
+            </ul>
+          </li>
 
-       <!-- Races group -->
-    <li class="border-t-1 border-teal">
-      <RouterLink to="/" class="py-1 hover:text-text" @click="menuOpen = false">Races</RouterLink>
-      <ul class="mt-1">
-        <li>
-          <RouterLink
-            :to="{ name: 'race', params: { id: 'hard' } }"
-            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-            @click="menuOpen = false"
-          >
-            <i class="fa-solid fa-person-swimming"></i> SwimRun HARD
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            :to="{ name: 'race', params: { id: 'light' } }"
-            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-            @click="menuOpen = false"
-          >
-            <i class="fa-solid fa-person-swimming"></i> SwimRun LIGHT
-          </RouterLink>
-        </li>
-      </ul>
-    </li>
+          <li class="border-teal border-t-1">
+            <RouterLink to="/participants" class="hover:text-text py-1" @click="menuOpen = false"
+              >Participants</RouterLink
+            >
+            <ul class="mt-1">
+              <li>
+                <RouterLink
+                  :to="{ name: 'participants', query: { race: 'hard' } }"
+                  class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                  @click="menuOpen = false"
+                >
+                  <i class="fa-solid fa-users"></i> HARD — Start list
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="{ name: 'participants', query: { race: 'light' } }"
+                  class="font-body hover:bg-bg block px-4 py-2.5 hover:rounded-md"
+                  @click="menuOpen = false"
+                >
+                  <i class="fa-solid fa-users"></i> LIGHT — Start list
+                </RouterLink>
+              </li>
+            </ul>
+          </li>
 
-    <li class="border-t-1 border-teal">
-      <RouterLink to="/participants" class="py-1 hover:text-text" @click="menuOpen = false">Participants</RouterLink>
-       <ul class="mt-1">
-        <li>
-          <RouterLink
-           :to="{ name: 'participants', query: { race: 'hard' } }"
-            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-            @click="menuOpen = false"
-          >
-            <i class="fa-solid fa-users"></i> HARD — Start list
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            :to="{ name: 'participants', query: { race: 'light' } }"
-            class="block px-4 py-2.5 font-body hover:bg-bg hover:rounded-md"
-            @click="menuOpen = false"
-          >
-            <i class="fa-solid fa-users"></i> LIGHT — Start list
-          </RouterLink>
-        </li>
-      </ul>
-    </li>
+          <li v-if="!isAuthed" class="border-teal border-t-1">
+            <RouterLink to="/auth/login" class="hover:text-text py-1" @click="menuOpen = false"
+              >Sign in</RouterLink
+            >
+          </li>
 
-    <li v-if="!isAuthed" class="border-t-1 border-teal">
-      <RouterLink to="/auth/login" class="py-1 hover:text-text" @click="menuOpen = false">Sign in</RouterLink>
-    </li>
+          <li v-else class="border-teal border-t-1">
+            <RouterLink
+              v-if="isAdmin"
+              to="/admin"
+              class="font-body hover:bg-bg block py-2.5 hover:rounded-md"
+              @click="menuOpen = false"
+            >
+              <i class="fa-solid fa-gauge-high"></i> Dashboard
+            </RouterLink>
 
-    <li v-else class="border-t-1 border-teal">
-      <RouterLink
-    v-if="isAdmin"
-    to="/admin"
-    class="block py-2.5 font-body hover:bg-bg hover:rounded-md "
-    @click="menuOpen = false"
-  >
-    <i class="fa-solid fa-gauge-high"></i> Dashboard
-  </RouterLink>
+            <!-- If USER: Profile -->
+            <RouterLink
+              v-else
+              to="/profile"
+              class="font-body hover:bg-bg block hover:rounded-md"
+              @click="menuOpen = false"
+            >
+              <i class="fa-solid fa-passport"></i> Profile
+            </RouterLink>
+          </li>
 
-  <!-- If USER: Profile -->
-  <RouterLink
-    v-else
-    to="/profile"
-    class="block font-body hover:bg-bg hover:rounded-md"
-    @click="menuOpen = false"
-  >
-    <i class="fa-solid fa-passport"></i> Profile
-  </RouterLink>
-    </li>
+          <li v-if="isAuthed">
+            <button
+              class="hover:text-text py-2.5 text-left"
+              @click="
+                handleSignOut()
+                menuOpen = false
+              "
+            >
+              <i class="fa-solid fa-right-from-bracket"></i>
 
-    <li v-if="isAuthed">
-      <button
-        class="py-2.5 hover:text-text text-left"
-        @click="handleSignOut(); menuOpen = false"
-      ><i class="fa-solid fa-right-from-bracket"></i>
-
-        Sign out
-      </button>
-    </li>
-    <li v-if="isAuthed && !isAdmin">
-       <RouterLink to="/register/hard" aria-label="Register" class="hover:text-text py-2.5"  @click="menuOpen = false">
-    <i class="fa-solid fa-cart-shopping text-lg text-text hover:text-teal"></i>Checkout
-  </RouterLink>
-    </li>
-  </ul>
-</div>
+              Sign out
+            </button>
+          </li>
+          <li v-if="isAuthed && !isAdmin">
+            <RouterLink
+              to="/register/hard"
+              aria-label="Register"
+              class="hover:text-text py-2.5"
+              @click="menuOpen = false"
+            >
+              <i class="fa-solid fa-cart-shopping text-text hover:text-teal text-lg"></i>Checkout
+            </RouterLink>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>

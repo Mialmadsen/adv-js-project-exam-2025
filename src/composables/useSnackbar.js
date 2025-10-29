@@ -3,7 +3,7 @@ import { reactive } from 'vue'
 const state = reactive({
   open: false,
   text: '',
-  timeout: 3000
+  timeout: 3000,
 })
 
 let timer = null
@@ -14,9 +14,13 @@ export function useSnackbar() {
     state.timeout = ms
     state.open = true
     clearTimeout(timer)
-    timer = setTimeout(() => { state.open = false }, ms)
+    timer = setTimeout(() => {
+      state.open = false
+    }, ms)
   }
-  function hideSnack() { state.open = false }
+  function hideSnack() {
+    state.open = false
+  }
 
   return { state, showSnack, hideSnack }
 }

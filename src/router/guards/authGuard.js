@@ -4,13 +4,13 @@ import { watch } from 'vue'
 
 export function installAuthGuards(router) {
   const { isLoggedIn, authReady } = useAuth()
-  const { isAdmin }   = useRole()
+  const { isAdmin } = useRole()
 
   router.beforeEach(async (to) => {
     // Vent på at Firebase Auth er klar
     if (!authReady.value) {
-      await new Promise(resolve => {
-        const unwatch = watch(authReady, ready => {
+      await new Promise((resolve) => {
+        const unwatch = watch(authReady, (ready) => {
           if (ready) {
             unwatch()
             resolve(true)

@@ -16,7 +16,7 @@ export function useCloudinary() {
 
     const res = await fetch(`https://api.cloudinary.com/v1_1/${cloud}/image/upload`, {
       method: 'POST',
-      body: form
+      body: form,
     })
     if (!res.ok) throw new Error('Cloudinary upload failed')
     const data = await res.json()

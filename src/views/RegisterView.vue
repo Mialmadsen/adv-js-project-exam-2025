@@ -1,9 +1,9 @@
 <template>
   <!-- Page layout: Centered registration form -->
-  <div class="min-h-screen flex items-center justify-center p-8">
-    <div class="bg-white shadow-lg rounded-md p-8 w-full max-w-lg">
+  <div class="flex min-h-screen items-center justify-center p-8">
+    <div class="w-full max-w-lg rounded-md bg-white p-8 shadow-lg">
       <!-- Heading -->
-      <h2 class="text-3xl font-title font-bold text-center text-accent mb-8">
+      <h2 class="font-title text-accent mb-8 text-center text-3xl font-bold">
         Register for a Race
       </h2>
 
@@ -13,7 +13,7 @@
         <div>
           <label class="ui-label">Select Race</label>
           <select v-model="selectedRaceId" class="ui-input" required>
-            <option value="" disabled >Select a race</option>
+            <option value="" disabled>Select a race</option>
             <option v-for="r in races" :key="r.id" :value="r.id">{{ r.title }}</option>
           </select>
         </div>
@@ -24,11 +24,11 @@
           <div class="space-y-2">
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.tshirt" />
-              T-shirt (+{{effectiveTshirtPrice||0 }} DKK)
+              T-shirt (+{{ effectiveTshirtPrice || 0 }} DKK)
             </label>
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.medal" />
-              Medal (+{{effectiveMedalPrice||0 }} DKK)
+              Medal (+{{ effectiveMedalPrice || 0 }} DKK)
             </label>
             <label class="flex items-center gap-2">
               <input type="checkbox" v-model="extras.meal" />
@@ -38,14 +38,10 @@
         </div>
 
         <!-- Total price display -->
-        <div class="text-center mt-8 text-xl font-bold">
-          Total: {{ totalPrice }} DKK
-        </div>
+        <div class="mt-8 text-center text-xl font-bold">Total: {{ totalPrice }} DKK</div>
 
         <!-- Submit button -->
-        <BaseButton class="w-full mt-6 py-2" type="submit">
-          Check out
-        </BaseButton>
+        <BaseButton class="mt-6 w-full py-2" type="submit"> Check out </BaseButton>
       </form>
     </div>
   </div>
@@ -63,7 +59,6 @@ import { useSnackbar } from '@/composables/useSnackbar'
 
 const { showSnack } = useSnackbar()
 
-
 // --- Get current user and login state from auth composable ---
 const { currentUser, isLoggedIn } = useAuth()
 const router = useRouter()
@@ -80,31 +75,30 @@ const extras = ref({ tshirt: false, medal: false, meal: false })
 // --- Load all races from Firestore when component mounts ---
 async function loadRaces() {
   try {
-    const snap = await getDocs(collection(db, "races"))
-    races.value = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+    const snap = await getDocs(collection(db, 'races'))
+    races.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
   } catch (err) {
     console.error(err)
-    showSnack("Failed to load races")
+    showSnack('Failed to load races')
   }
 }
 onMounted(() => loadRaces())
-const selectedRace = computed(() => races.value.find(r => r.id === selectedRaceId.value) || null)
+const selectedRace = computed(() => races.value.find((r) => r.id === selectedRaceId.value) || null)
 
 const toNumber = (v, fallback) => {
-  const n = typeof v === 'number' ? v : (v == null ? NaN : Number(v))
+  const n = typeof v === 'number' ? v : v == null ? NaN : Number(v)
   return Number.isFinite(n) ? n : fallback
 }
 
 const effectiveTshirtPrice = computed(() => toNumber(selectedRace.value?.tshirtPrice, 100))
-const effectiveMedalPrice  = computed(() => toNumber(selectedRace.value?.medalPrice,  50 ))
-
+const effectiveMedalPrice = computed(() => toNumber(selectedRace.value?.medalPrice, 50))
 
 // --- Compute total price based on selected race and extras ---
 const totalPrice = computed(() => {
   if (!selectedRace.value) return 0
   let total = toNumber(selectedRace.value.price, 0)
   if (extras.value.tshirt) total += effectiveTshirtPrice.value
-  if (extras.value.medal)  total += effectiveMedalPrice.value
+  if (extras.value.medal) total += effectiveMedalPrice.value
   return total
 })
 
@@ -123,15 +117,15 @@ async function submitRegistration() {
   }
 
   // --- Require race selection ---
-  const race = races.value.find(r => r.id === selectedRaceId.value)
+  const race = races.value.find((r) => r.id === selectedRaceId.value)
   if (!race) {
-    showSnack("Select a race!")
+    showSnack('Select a race!')
     return
   }
 
   // --- Check if user already registered for any race ---
-  const userRef = doc(db, "users", currentUser.value.uid)
-  const regRef = collection(userRef, "registrations")
+  const userRef = doc(db, 'users', currentUser.value.uid)
+  const regRef = collection(userRef, 'registrations')
   const existing = await getDocs(regRef)
   if (!existing.empty) {
     showSnack(`You are already registered for a race! You cannot register again.`)
@@ -147,7 +141,7 @@ async function submitRegistration() {
     extras: extras.value,
     total: totalPrice.value,
     bib,
-    createdAt: new Date()
+    createdAt: new Date(),
   }
 
   try {
@@ -155,16 +149,20 @@ async function submitRegistration() {
     await addDoc(regRef, registrationData)
 
     // --- Save registration in central participants collection (by UID) ---
-    const participantDocRef = doc(db, "participants", currentUser.value.uid)
-    await setDoc(participantDocRef, {
-      email: currentUser.value.email,
-      raceId: race.id,
-      raceTitle: race.title,
-      bib,
-      extras: extras.value,
-      total: totalPrice.value,
-      createdAt: new Date()
-    }, { merge: true }) // merge=true to avoid duplicates
+    const participantDocRef = doc(db, 'participants', currentUser.value.uid)
+    await setDoc(
+      participantDocRef,
+      {
+        email: currentUser.value.email,
+        raceId: race.id,
+        raceTitle: race.title,
+        bib,
+        extras: extras.value,
+        total: totalPrice.value,
+        createdAt: new Date(),
+      },
+      { merge: true },
+    ) // merge=true to avoid duplicates
 
     // --- Store registration in sessionStorage for ThankYouView ---
     sessionStorage.setItem('registration', JSON.stringify(registrationData))
@@ -172,8 +170,8 @@ async function submitRegistration() {
     // --- Redirect to thank you page ---
     router.push('/thankyou')
   } catch (err) {
-    console.error("Error saving registration:", err)
-    showSnack("There was an error saving your registration.")
+    console.error('Error saving registration:', err)
+    showSnack('There was an error saving your registration.')
   }
 }
 </script>

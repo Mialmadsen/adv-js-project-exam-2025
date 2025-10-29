@@ -14,26 +14,26 @@ const listHandlers = (getArr) => ({
     const a = getArr()
     a.splice(i, 1)
     if (!a.length) a.push('')
-  }
+  },
 })
 
 export function useRaceEditor(propsId) {
-  const router   = useRouter()
-  const loading  = ref(true)
-  const saving   = ref(false)
+  const router = useRouter()
+  const loading = ref(true)
+  const saving = ref(false)
   const errorMsg = ref('')
 
   const form = reactive(makeDefaults(propsId ?? ''))
 
-  const isEdit    = computed(() => !!propsId)
+  const isEdit = computed(() => !!propsId)
   const pageTitle = computed(() => (isEdit.value ? `Edit race: ${propsId}` : 'Create new race'))
 
   // build list helpers with getters (not direct array refs)
   const lists = {
-    courseOutline:        listHandlers(() => form.courseOutline),
-    equipmentMandatory:   listHandlers(() => form.equipmentMandatory),
+    courseOutline: listHandlers(() => form.courseOutline),
+    equipmentMandatory: listHandlers(() => form.equipmentMandatory),
     equipmentRecommended: listHandlers(() => form.equipmentRecommended),
-    perks:                listHandlers(() => form.perks)
+    perks: listHandlers(() => form.perks),
   }
 
   const fetchRace = async (id) => {
@@ -68,7 +68,7 @@ export function useRaceEditor(propsId) {
 
   const validate = () => {
     if (!isEdit.value && !form.id.trim()) throw new Error('Please provide an ID (e.g., "hard").')
-    if (!form.title.trim())                throw new Error('Title is required.')
+    if (!form.title.trim()) throw new Error('Title is required.')
   }
 
   const save = async () => {
@@ -92,9 +92,15 @@ export function useRaceEditor(propsId) {
   const cancel = () => router.push({ name: 'admin-races' })
 
   return {
-    form, loading, saving, errorMsg,
-    isEdit, pageTitle,
+    form,
+    loading,
+    saving,
+    errorMsg,
+    isEdit,
+    pageTitle,
     lists,
-    load, save, cancel
+    load,
+    save,
+    cancel,
   }
 }

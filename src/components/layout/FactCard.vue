@@ -7,9 +7,9 @@ const props = defineProps({
 
 <template>
   <!-- no background here; the parent bar provides bg + dividers -->
-  <div class="h-full flex items-center gap-4 px-5 py-4 text-text  hover:bg-teal/40">
+  <div class="text-text hover:bg-teal/40 flex h-full items-center gap-4 px-5 py-4">
     <!-- icon circle (slot) -->
-    <div class="shrink-0 grid place-items-center w-12 h-12 rounded-full bg-black/70">
+    <div class="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-black/70">
       <slot name="icon">
         <i class="fa-solid fa-circle-info text-on-brand-text"></i>
       </slot>

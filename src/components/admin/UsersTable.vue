@@ -4,7 +4,7 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   errorMsg: { type: String, default: '' },
   sortKey: { type: String, default: null },
-  sortDir: { type: String, default: 'asc' } // 'asc' | 'desc'
+  sortDir: { type: String, default: 'asc' }, // 'asc' | 'desc'
 })
 
 const emit = defineEmits(['sort', 'select'])
@@ -22,9 +22,8 @@ function iconFor(key) {
   <section class="admin-card">
     <!-- Header (desktop/tablet) -->
     <div
-      class="hidden md:grid grid-cols-12 gap-3 pl-1 py-2 border-b bg-accent/20 border-text/10 text-sm font-title"
+      class="bg-accent/20 border-text/10 font-title hidden grid-cols-12 gap-3 border-b py-2 pl-1 text-sm md:grid"
     >
-
       <button class="col-span-4 flex items-center gap-1 text-left" @click="askSort('fullName')">
         <span>Name</span><span class="text-xs opacity-70">{{ iconFor('fullName') }}</span>
       </button>
@@ -42,7 +41,7 @@ function iconFor(key) {
       </button>
     </div>
 
-    <div v-if="loading" class="py-6 text-text/70">Loading…</div>
+    <div v-if="loading" class="text-text/70 py-6">Loading…</div>
     <p v-else-if="errorMsg" class="text-danger py-6">{{ errorMsg }}</p>
 
     <!-- Rows -->
@@ -50,36 +49,38 @@ function iconFor(key) {
       v-else
       v-for="u in users"
       :key="u.id"
-      class="grid grid-cols-2 md:grid-cols-12 gap-2 md:gap-3 pl-1 py-2 border-b border-text/10 text-sm items-center cursor-pointer hover:bg-teal/50"
+      class="border-text/10 hover:bg-teal/50 grid cursor-pointer grid-cols-2 items-center gap-2 border-b py-2 pl-1 text-sm md:grid-cols-12 md:gap-3"
       @click="emit('select', u)"
     >
       <!-- Name -->
-      <div class="col-span-2 md:col-span-4 min-w-0">
-        <span class="md:hidden block text-[11px] uppercase tracking-wide opacity-60">Name</span>
+      <div class="col-span-2 min-w-0 md:col-span-4">
+        <span class="block text-[11px] tracking-wide uppercase opacity-60 md:hidden">Name</span>
         <div class="font-title truncate">{{ u.fullName || '—' }}</div>
       </div>
 
       <!-- Email -->
-      <div class="col-span-2 md:col-span-3 min-w-0">
-        <span class="md:hidden block text-[11px] uppercase tracking-wide opacity-60">Email</span>
+      <div class="col-span-2 min-w-0 md:col-span-3">
+        <span class="block text-[11px] tracking-wide uppercase opacity-60 md:hidden">Email</span>
         <div class="truncate">{{ u.email || '—' }}</div>
       </div>
 
       <!-- Age -->
       <div class="col-span-1 md:col-span-1">
-        <span class="md:hidden block text-[11px] uppercase tracking-wide opacity-60">Age</span>
+        <span class="block text-[11px] tracking-wide uppercase opacity-60 md:hidden">Age</span>
         <div>{{ u.age ?? '—' }}</div>
       </div>
 
       <!-- Gender -->
       <div class="col-span-1 md:col-span-2">
-        <span class="md:hidden block text-[11px] uppercase tracking-wide opacity-60">Gender</span>
+        <span class="block text-[11px] tracking-wide uppercase opacity-60 md:hidden">Gender</span>
         <div class="truncate">{{ u.gender || '—' }}</div>
       </div>
 
       <!-- Nationality -->
-      <div class="col-span-2 md:col-span-2 min-w-0">
-        <span class="md:hidden block text-[11px] uppercase tracking-wide opacity-60">Nationality</span>
+      <div class="col-span-2 min-w-0 md:col-span-2">
+        <span class="block text-[11px] tracking-wide uppercase opacity-60 md:hidden"
+          >Nationality</span
+        >
         <div class="truncate">{{ u.nationality || '—' }}</div>
       </div>
     </div>

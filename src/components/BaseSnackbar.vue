@@ -7,15 +7,11 @@ const { state, hideSnack } = useSnackbar()
   <transition name="slide-down">
     <div
       v-if="state.open"
-      class="fixed top-4 left-1/2 -translate-x-1/2 z-[1000]
-             flex items-center justify-center
-             min-w-[280px] max-w-[90vw]
-             px-6 py-3 rounded-md shadow-lg cursor-pointer
-             bg-accent text-on-brand-text font-title text-lg tracking-wide"
+      class="bg-accent text-on-brand-text font-title fixed top-4 left-1/2 z-[1000] flex max-w-[90vw] min-w-[280px] -translate-x-1/2 cursor-pointer items-center justify-center rounded-md px-6 py-3 text-lg tracking-wide shadow-lg"
       @click="hideSnack"
       role="status"
     >
-      <i class="fa-solid fa-circle-info mr-3 text-on-brand-text/90"></i>
+      <i class="fa-solid fa-circle-info text-on-brand-text/90 mr-3"></i>
       {{ state.text }}
     </div>
   </transition>
